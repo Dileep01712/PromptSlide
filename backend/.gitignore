@@ -1,0 +1,6 @@
+# Ignore .env file
+.env
+
+# Ignore notes.txt file
+notes.txt
+sample.txt
