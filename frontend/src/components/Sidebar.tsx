@@ -1,27 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket, faGear, faHistory, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faBars, faGear, faHistory, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { PersonCircle, WindowSidebar } from 'react-bootstrap-icons';
 
-const Sidebar: React.FC = () => {
-    const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+interface SidebarProps {
+    isSidebarExpanded: boolean;
+    setIsSidebarExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+    isLargeScreen: boolean,
+    setIsLargeScreen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpanded, isLargeScreen }) => {
     const [isLogoutVisible, setIsLogoutVisible] = useState(false);
-    const [modalHeight, setModalHeight] = useState(0);
     const modalRef = useRef<HTMLDivElement>(null);
 
     const toggleLogout = () => {
-        if (!isLogoutVisible) {
-            setModalHeight(99);
-        } else {
-            setModalHeight(0);
-        }
         setIsLogoutVisible(!isLogoutVisible);
     };
 
     const handleClickOutside = (event: MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
             setIsLogoutVisible(false);
-            setModalHeight(0);
         }
     };
 
@@ -30,60 +29,63 @@ const Sidebar: React.FC = () => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <div className={`fixed top-0 left-0 h-full ${isSidebarExpanded ? 'w-64' : 'w-16'} bg-sidebarColor text-textColor flex flex-col z-20 transition-width duration-300 ease`}>
-            <div className="flex p-2 pb-3">
-                <div className='self-center p-2 hover:bg-bodyColor rounded cursor-pointer' onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}>
+        <div className={`absolute top-0 left-0 z-20 bg-sidebarColor text-textColor flex flex-col ${isSidebarExpanded ? 'w-64 p-3 pt-2' : 'w-0 p-0'} ${isLargeScreen ? 'h-screen' : 'h-full'}`}>
+            <div className={`rounded w-fit cursor-pointer ${isSidebarExpanded ? 'p-3' : 'p-3 mt-2 ml-3'} ${isLargeScreen ? 'mr-auto hover:bg-bodyColor mb-6' : 'pt-1.5 pl-0 hover:bg-transparent mb-2'}`} onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}>
+                {isLargeScreen ? (
                     <WindowSidebar size={"20px"} />
-                </div>
-                {isSidebarExpanded && (
-                    <div className='self-center p-2 ml-auto hover:bg-bodyColor rounded cursor-pointer'>
-                        <FontAwesomeIcon icon={faPenToSquare} fontSize={"21px"} />
-                    </div>
+                ) : (
+                    <FontAwesomeIcon icon={faBars} fontSize={"20px"} />
                 )}
             </div>
-
-            <div className='flex p-3 m-1 cursor-pointer hover:bg-bodyColor rounded'>
-                {isSidebarExpanded && <div className="new-chat-icon">New Chat</div>}
-                <div className={`ml-auto self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
-                    <FontAwesomeIcon icon={faPenToSquare} fontSize={"21px"} />
-                </div>
-            </div>
-
-            <div className='flex p-3 m-1 h-full overflow-hidden hover:bg-bodyColor rounded'>
-                {isSidebarExpanded && <div className="ppt-history">PPT History</div>}
-                <div className={`ml-auto cursor-pointer ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
-                    <FontAwesomeIcon icon={faHistory} fontSize={"20px"} />
-                </div>
-            </div>
-
-            <div ref={modalRef} className='rounded-t-lg m-1 transition-top duration-300 ease relative' style={{ top: `-${modalHeight}px` }} onClick={toggleLogout}>
-                <div className='flex p-3 hover:bg-bodyColor rounded cursor-pointer'>
-                    <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
-                        <PersonCircle size={"20px"} />
-                    </div>
-                    {isSidebarExpanded && <div className="account">Account</div>}
-                </div>
-                {isLogoutVisible && (
-                    <div className="">
-                        <div className='flex p-3 hover:bg-bodyColor rounded cursor-pointer'>
-                            <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
-                                <FontAwesomeIcon icon={faGear} fontSize={"20px"} />
-                            </div>
-                            {isSidebarExpanded && <div className="settings">Settings</div>}
-                        </div>
-                        <hr className='m-2' />
-                        <div className='flex p-3 hover:bg-bodyColor rounded cursor-pointer'>
-                            <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
-                                <FontAwesomeIcon icon={faArrowRightFromBracket} fontSize={"20px"} />
-                            </div>
-                            {isSidebarExpanded && <div className="logout">Log out</div>}
+            {isSidebarExpanded && (
+                <>
+                    <div className={`flex justify-between cursor-pointer mb-2 hover:bg-bodyColor rounded ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                        {isSidebarExpanded && <div className="new-chat-icon">New Chat</div>}
+                        <div className={`${!isSidebarExpanded ? 'mx-auto' : ''}`}>
+                            <FontAwesomeIcon icon={faPenToSquare} fontSize={"21px"} />
                         </div>
                     </div>
-                )}
-            </div>
+
+                    <div className='h-5/6 sm:h-4/6 md:h-5/6 overflow-y-auto rounded scrollbar'>
+                        <div className={`flex hover:bg-bodyColor cursor-pointer ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                            {isSidebarExpanded && <div className="h-fit ppt-history">PPT History</div>}
+                            <div className={`ml-auto h-fit ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
+                                <FontAwesomeIcon icon={faHistory} fontSize={"20px"} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ref={modalRef} className={`rounded-t-lg mt-2 transition duration-300 ease-in-out ${isLogoutVisible ? 'shadow-top-custom' : 'shadow-top-none'}`} onClick={toggleLogout}>
+                        <div className={`flex hover:bg-bodyColor rounded cursor-pointer ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                            <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
+                                <PersonCircle size={"20px"} />
+                            </div>
+                            {isSidebarExpanded && <div className="account">Account</div>}
+                        </div>
+                        {isLogoutVisible && (
+                            <div className="">
+                                <div className={`flex hover:bg-bodyColor rounded cursor-pointer ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                                    <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
+                                        <FontAwesomeIcon icon={faGear} fontSize={"20px"} />
+                                    </div>
+                                    {isSidebarExpanded && <div className="settings">Settings</div>}
+                                </div>
+                                <hr className='m-2' />
+                                <div className={`flex hover:bg-bodyColor rounded cursor-pointer ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                                    <div className={`mr-5 self-center ${!isSidebarExpanded ? 'mx-auto' : ''}`}>
+                                        <FontAwesomeIcon icon={faArrowRightFromBracket} fontSize={"20px"} />
+                                    </div>
+                                    {isSidebarExpanded && <div className="logout">Log out</div>}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

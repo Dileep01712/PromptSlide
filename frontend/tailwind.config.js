@@ -23,9 +23,18 @@ module.exports = {
       transitionDuration: {
         '300': '300ms',
         '500': '500ms',
+        '700': '700ms',
+        '1000': '1000ms',
       },
       transitionTimingFunction: {
-        'ease': 'ease',
+        'ease-in-out': 'ease-in-out',
+      },
+      spacing: {
+        '18': '4.5rem',
+      },
+      boxShadow: {
+        'transparent': '0 1px 2px 0 rgba(0, 0, 0, 0)',
+        'top-custom': `0 -15px 10px -2px rgba(0, 0, 0, 0.5)`,
       },
 
       colors: {
@@ -33,6 +42,7 @@ module.exports = {
         sidebarColor: '#171717',
         inputColor: '#2F2F2F',
         textColor: '#ECECEC',
+        buttonColor: '#484848',
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
