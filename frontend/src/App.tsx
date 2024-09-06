@@ -1,24 +1,20 @@
-import { useState } from 'react';
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import MainContent from './components/MainContent';
-import ChatInput from './components/ChatInput';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import MainLayout from './components/MainLayout';
+import LandingPage from './components/LandingPage';
+import Home from './components/Home';
 
-function App() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
-
+const App: React.FC = () => {
   return (
-    <div className={`flex flex-col ${isLargeScreen ? 'min-h-lvh' : 'h-dvh'}`}>
-      <Navbar isLargeScreen={isLargeScreen} setIsLargeScreen={setIsLargeScreen} />
-      <div className="flex flex-grow">
-        <Sidebar isSidebarExpanded={isSidebarExpanded} setIsSidebarExpanded={setIsSidebarExpanded} isLargeScreen={isLargeScreen} setIsLargeScreen={setIsLargeScreen} />
-        <MainContent isSidebarExpanded={isSidebarExpanded} isLargeScreen={isLargeScreen} />
-      </div>
-        <ChatInput isSidebarExpanded={isSidebarExpanded} isLargeScreen={isLargeScreen} />
-    </div>
+    <Router>
+      <MainLayout>
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/home' element={<Home />} />
+        </Routes>
+      </MainLayout >
+    </Router>
   );
-}
+};
 
 export default App;

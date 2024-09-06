@@ -33,8 +33,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
     }, []);
 
     return (
-        <div className={`absolute top-0 left-0 z-20 bg-sidebarColor text-textColor flex flex-col ${isSidebarExpanded ? 'w-64 p-3 pt-2' : 'w-0 p-0'} ${isLargeScreen ? 'h-screen' : 'h-full'}`}>
-            <div className={`rounded w-fit cursor-pointer ${isSidebarExpanded ? 'p-3' : 'p-3 mt-2 ml-3'} ${isLargeScreen ? 'mr-auto hover:bg-bodyColor mb-6' : 'pt-1.5 pl-0 hover:bg-transparent mb-2'}`} onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}>
+        <div className={`absolute top-0 left-0 z-20 p-3 bg-sidebarColor text-textColor flex flex-col ${isSidebarExpanded ? 'w-60' : 'w-14'} ${isLargeScreen ? 'h-screen' : 'h-full'}`}>
+            <div className={`rounded w-fit cursor-pointer ${isSidebarExpanded ? 'p-1.5' : 'p-1.5'} ${isLargeScreen ? 'mr-auto hover:bg-bodyColor' : 'pt-1.5 pl-0 hover:bg-transparent mb-2'}`} onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}>
                 {isLargeScreen ? (
                     <WindowSidebar size={"20px"} />
                 ) : (
@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
             </div>
             {isSidebarExpanded && (
                 <>
-                    <div className={`flex justify-between cursor-pointer mb-2 hover:bg-bodyColor rounded ${isLargeScreen ? 'p-3' : 'p-1 pt-2 pb-2'}`}>
+                    <div className={`flex justify-between cursor-pointer mt-9 mb-2 hover:bg-bodyColor rounded ${isLargeScreen ? 'p-2.5' : 'p-1 pt-2 pb-2'}`}>
                         {isSidebarExpanded && <div className="new-chat-icon">New Chat</div>}
                         <div className={`${!isSidebarExpanded ? 'mx-auto' : ''}`}>
                             <FontAwesomeIcon icon={faPenToSquare} fontSize={"21px"} />

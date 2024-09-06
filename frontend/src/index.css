@@ -9,8 +9,30 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Lato';
+  src: url('fonts/LatoRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Degular';
+  src: url('fonts/DegularSemibold.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .font-Varino {
   font-family: 'Varino', sans-serif;
+}
+
+.font-Lato {
+  font-family: 'Lato';
+}
+
+.font-Degular {
+  font-family: 'Degular';
 }
 
 .scrollbar::-webkit-scrollbar {
