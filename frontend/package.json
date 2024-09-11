@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@material-tailwind/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
@@ -27,6 +28,7 @@
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
+    "react-typed": "^2.0.12",
     "shadcn": "^1.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"

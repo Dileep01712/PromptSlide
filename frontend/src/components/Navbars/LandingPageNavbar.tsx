@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from '../ui/button';
 import { useNavigation } from "../Navigate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ const LandingPageNavbar: React.FC = () => {
     const [isLargeScreen] = useState(window.innerWidth >= 1024);
     const { handleButtonClick } = useNavigation();
     const [showButtons, setShowButtons] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null); // Ref for the dropdown  
 
     useEffect(() => {
         const handleScroll = () => {
@@ -35,6 +36,20 @@ const LandingPageNavbar: React.FC = () => {
         }
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        // Close the dropdown if clicking outside of it  
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setShowButtons(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
             <div className="flex items-center select-none" onClick={() => handleButtonClick('/')}>
@@ -53,7 +68,7 @@ const LandingPageNavbar: React.FC = () => {
                     </>
                 ) : (
                     <>
-                        <div className="relative">
+                        <div className="relative" ref={dropdownRef}> {/* Attach ref here */}
                             <FontAwesomeIcon icon={faBars} fontSize={"20px"} onClick={handleToggleButtons} />
                             {showButtons && (
                                 <div className="absolute top-11 transform -translate-x-full z-50 rounded-lg shadow-xl p-5 w-min transition-all duration-300 bg-blue-100">

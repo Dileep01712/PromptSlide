@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 module.exports = {
 	darkMode: ["class"],
 	content: [
@@ -17,6 +18,9 @@ module.exports = {
 			}
 		},
 		extend: {
+			textColor: {
+				'gradient': 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)',
+			},
 			backgroundImage: {
 				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
 			},
@@ -113,5 +117,31 @@ module.exports = {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		// eslint-disable-next-line no-undef
+		require("tailwindcss-animate"),
+		function ({ addBase }) {
+			addBase({
+				// For Chrome, Safari, Edge, Opera
+				'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button': {
+					'-webkit-appearance': 'none',
+					'margin': '0',
+				},
+				// For Firefox
+				'input[type="number"]': {
+					'-moz-appearance': 'textfield',
+				},
+			});
+		},
+
+		function ({ addUtilities }) {
+			addUtilities({
+				'.text-gradient': {
+					background: 'linear-gradient(to right, #ffffff, #7e1ddb, #3b82f6)',
+					'-webkit-background-clip': 'text',
+					'-webkit-text-fill-color': 'transparent',
+				},
+			}, ['responsive', 'hover'])
+		}
+	],
 }
