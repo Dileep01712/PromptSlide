@@ -1,10 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from '../ui/button';
-import { useNavigation } from "../Navigate";
+import { useNavigation } from "../Navigation/Navigate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { BrightnessHigh, MoonStarsFill } from "react-bootstrap-icons";
 
-const LandingPageNavbar: React.FC = () => {
+interface LandingPageNavbarProps {
+    isDarkMode: boolean;
+    toggleIcon: () => void;
+}
+
+const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({isDarkMode, toggleIcon }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLargeScreen] = useState(window.innerWidth >= 1024);
     const { handleButtonClick } = useNavigation();
@@ -51,20 +57,32 @@ const LandingPageNavbar: React.FC = () => {
     }, []);
 
     return (
-        <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
+        <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
             <div className="flex items-center select-none" onClick={() => handleButtonClick('/')}>
                 <div className='flex justify-center items-center cursor-pointer w-10 lg:w-fit'>
                     <img src="./src/assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
                 </div>
-                <div className='inline-block pl-2 cursor-pointer font-Varino font-bold lg:text-2xl'>
-                    PROMPTSLIDE
+                <div className='inline-block pl-2 cursor-pointer'>
+                    <span className="font-Varino font-bold lg:text-2xl text-black dark:text-white">
+                        PROMPTSLIDE
+                    </span>
                 </div>
             </div>
             <div className="w-fit md:flex ml-auto">
                 {isLargeScreen ? (
                     <>
-                        <Button className="ml-auto mr-4 font-Degular text-md">Log in</Button>
-                        <Button className="mr-4 font-Degular text-md">Sign Up</Button>
+                        <div className="hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer" onClick={toggleIcon}>
+                            {isDarkMode ? (
+                                <BrightnessHigh size={"28px"} />
+                            ) : (
+                                <MoonStarsFill size={"28px"} />
+                            )}
+                        </div>
+                        <div className="border-l border-black dark:border-white h-9 ml-4"></div>
+                        <div>
+                            <Button className="mx-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/login')}>Log In</Button>
+                            <Button className="mr-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/signup')}>Sign Up</Button>
+                        </div>
                     </>
                 ) : (
                     <>

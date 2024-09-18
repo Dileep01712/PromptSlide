@@ -1,12 +1,12 @@
 import React from 'react';
-import { useNavigation } from '../Navigate';
+import { useNavigation } from '../Navigation/Navigate';
 
 const CommonFooter: React.FC = () => {
     const { handleButtonClick } = useNavigation();
 
     return (
         <footer className="z-10" >
-            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-gray-300'>
+            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-gray-300 dark:bg-zinc-950 dark:text-white dark:border-t'>
                 <div className='container mx-auto'>
                     <div className='flex flex-wrap'>
 

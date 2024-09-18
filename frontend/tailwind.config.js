@@ -19,10 +19,10 @@ module.exports = {
 		},
 		extend: {
 			textColor: {
-				'gradient': 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)',
+				gradient: 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)'
 			},
 			backgroundImage: {
-				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
+				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)'
 			},
 			transitionProperty: {
 				top: 'top'
@@ -110,10 +110,15 @@ module.exports = {
 						height: '0'
 					}
 				},
+				'gradient-x': {
+					'0%, 100%': { 'background-position': 'left center' },
+					'50%': { 'background-position': 'right center' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'gradient-x': 'gradient-x 15s ease infinite',
 			}
 		}
 	},

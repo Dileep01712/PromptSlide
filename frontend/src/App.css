@@ -31,14 +31,30 @@ span {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-@keyframes logo-spin {
-  from {
+@keyframes ringBell {
+  0% {
     transform: rotate(0deg);
   }
 
-  to {
-    transform: rotate(360deg);
+  25% {
+    transform: rotate(15deg);
   }
+
+  75% {
+    transform: rotate(-15deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.bell-icon {
+  transition: transform 0.4s ease-in-out;
+}
+
+.group:hover .bell-icon {
+  animation: ringBell 0.4s ease-in-out;
 }
 
 @media (prefers-reduced-motion: no-preference) {

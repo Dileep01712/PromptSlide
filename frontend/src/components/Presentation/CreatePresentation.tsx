@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactTyped } from 'react-typed';
-import { Button } from './ui/button';
-import CommonFooter from './Footer/CommonFooter';
-import UserInputModal from './Modal/UserInputModal';
+import { Button } from '../ui/button';
+import CommonFooter from '../Footer/CommonFooter';
+import UserInputModal from '../Modal/UserInputModal';
 
 const CreatePresentation: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,16 +25,26 @@ const CreatePresentation: React.FC = () => {
         }, 300);
     };
 
+    // Effect to handle page scroll when modal is open/closed  
+    useEffect(() => {
+        if (isOpen) {
+            // Disable scroll  
+            // document.body.style.overflow = 'hidden';
+        } else {
+            // Enable scroll  
+            document.body.style.overflow = 'unset';
+        }
+
+        // Cleanup function  
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     return (
         <>
-            <div className='h-screen'>
+            <div className="bg-[radial-gradient(circle_at_center,_#ffba27,_#6ec3f4,_#ef008f,_#7038ff)] h-screen animate-gradient-x">
                 <div className="absolute w-full mx-auto">
-                    {/* Background Image with Blur */}
-                    <div className="absolute inset-0 h-screen md:left-0 -left-80" style={{
-                        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4)), url(./src/assets/UserInput/userInput.png)',
-                        backgroundSize: 'cover',
-                        filter: 'blur(2px)',
-                    }}></div>
 
                     {/* Main Content */}
                     <div className="relative z-10 flex flex-col items-center mx-auto">
