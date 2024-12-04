@@ -50,6 +50,17 @@
   animation: fillAnimation 3s infinite;
 }
 
+:root {
+  --navbar-height: 117px;
+  --content-height: calc(100dvh - var(--navbar-height));
+}
+
+@media (min-width: 640px) {
+  :root {
+    --navbar-height: auto !important;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -9,7 +9,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
     return (
         <div>
             {/* Themes Designs */}
-            <div className={`w-full grid grid-cols-3 gap-4 ${activeDiv === 1 ? 'block' : 'hidden'}`}>
+            <div className={`w-full grid grid-cols-3 md:gap-4 gap-2 ${activeDiv === 1 ? 'block' : 'hidden'}`}>
 
                 <div className='flex flex-wrap box-border'>
                     <label className='relative cursor-pointer w-full rounded-md'>

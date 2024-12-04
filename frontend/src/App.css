@@ -12,8 +12,13 @@ h3 {
 }
 
 p,
-span {
+span,
+input {
   font-family: Lato;
+}
+
+input {
+  font-family: Lato !important;
 }
 
 .logo {

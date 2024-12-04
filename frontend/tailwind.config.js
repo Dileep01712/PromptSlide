@@ -22,7 +22,9 @@ module.exports = {
 				gradient: 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)'
 			},
 			backgroundImage: {
-				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)'
+				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
+				'instagram-gradient-light': 'linear-gradient(35deg, #fcd950, #fa851e, #d23976, #a033cc, #4F5BF1)',
+				
 			},
 			transitionProperty: {
 				top: 'top'

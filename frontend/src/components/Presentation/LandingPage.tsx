@@ -19,13 +19,13 @@ const LandingPage: React.FC = () => {
             <main className='relative flex flex-col sm:z-0 sm:mt-0'>
                 <div className="pb-14 relative flex flex-col sm:z-0 sm:mt-0 bg-white dark:bg-zinc-950">
                     {/* Header Section */}
-                    <header className="lg:grid lg:grid-cols-2 mx-auto max-w-screen-xl py-5 relative px-4 lg:px-8">
+                    <header className="lg:grid lg:grid-cols-2 mx-auto max-w-screen-xl lg:my-7 my-5 relative px-4 lg:px-8">
                         <div className='mx-auto flex flex-col w-full relative z-10 lg:mt-24 sm:text-center lg:pr-12 lg:text-left lg:col-span-1'>
-                            <h1 className="font-Degular text-gray-900 dark:text-white mb-5 lg:text-left lg:text-5xl text-3xl">AI presentation maker</h1>
+                            <h1 className="font-Degular text-gray-900 dark:text-white mb-5 lg:text-left text-center lg:text-5xl text-3xl">AI presentation maker</h1>
                             <p className="text-gray-800 dark:text-white md:text-xl mb-8 md:leading-relaxed leading-relaxed md:text-justify">
                                 If you're feeling uninspired or short on time, it's smart to ask for help. PromptSlide is here to assist you with its new feature—the AI presentation maker! With just a few clicks, you can create amazing slideshows that fit your needs. Best of all, it's completely free!
                             </p>
-                            <div className='flex flex-col items-center gap-2 mx-auto md:mx-0 sm:flex-row group w-48 font-Degular'>
+                            <div className='flex flex-col items-center gap-2 mx-auto md:mx-0 sm:flex-row group w-48 font-Degular my-3'>
                                 <Button className="h-14 px-8 rounded-full text-white dark:text-black text-xl font-semibold flex items-center gap-4" onClick={() => handleButtonClick('/create-presentation')}>
                                     Get Started
                                     <FontAwesomeIcon icon={faArrowRight} className="transition-transform transform group-hover:translate-x-1" />
@@ -38,38 +38,38 @@ const LandingPage: React.FC = () => {
                     </header>
 
                     {/* Features Section */}
-                    <div className="mx-auto">
-                        <h1 className="text-center font-Degular text-gray-900 dark:text-white my-5 mx-10 lg:text-left lg:text-5xl text-3xl">Features</h1>
+                    <div className="mx-auto lg:my-7 my-5">
+                        <h1 className="text-center font-Degular text-gray-900 dark:text-white mx-10 lg:text-5xl text-3xl">Features</h1>
                         <div className="lg:grid lg:grid-cols-3 mx-auto max-w-screen-xl relative px-4 p-5 lg:px-8">
-                            <div className="flex flex-col sm:text-center lg:col-span-1 p-6 bg-blue-100 rounded-3xl shadow-lg mb-8 md:m-2">
+                            <div className="flex flex-col sm:text-center lg:col-span-1 p-6 bg-blue-100 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
                                     <img src="./src/assets/Landing/features1.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
-                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl">AI-Powered Content Creation</h3>
-                                    <p className="text-gray-800 text-lg text-center">
+                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">AI-Powered Content Creation</h3>
+                                    <p className="text-gray-800 text-lg">
                                         Automatically generate slides based on your input. Just provide some details about what you want to share, and it will make beautiful slides for you.
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2">
+                            <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
                                     <img src="./src/assets/Landing/features2.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
-                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl">Customizable Templates</h3>
-                                    <p className="text-gray-800 text-lg text-center">
+                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Customizable Templates</h3>
+                                    <p className="text-gray-800 text-lg">
                                         You can find designs that suit any occasion, whether it’s for school, work, or personal projects. Each template is created by experts and can be easily changed to match your style.
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2">
+                            <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
                                     <img src="./src/assets/Landing/features3.webp" alt="Logo" className="h-56 object-fill w-full" />
                                 </div>
                                 <div className='pt-6'>
-                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl">Easy Editing Tools</h3>
-                                    <p className="text-gray-800 text-lg text-center">
+                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Easy Editing Tools</h3>
+                                    <p className="text-gray-800 text-lg">
                                         You can move elements around with your mouse, resize images, and change text without needing special skills. This makes it quick to create unique slides that reflect your ideas.
                                     </p>
                                 </div>
@@ -78,9 +78,9 @@ const LandingPage: React.FC = () => {
                     </div>
 
                     {/* How Works Section */}
-                    <div className="lg:py-12 py-5 lg:px-8 px-4">
-                        <div className='max-w-screen-md mx-auto'>
-                            <h2 className="text-3xl sm:text-5xl font-semibold mb-12 text-center">
+                    <div className="lg:my-7 my-5 lg:px-8 px-4">
+                        <div className='max-w-screen-lg mx-auto'>
+                            <h2 className="lg:text-5xl text-3xl font-semibold mb-12 text-center">
                                 <span className="text-blue-600 font-Degular">How does</span> <span className="text-black dark:text-white font-Degular">it work?</span>
                             </h2>
                             <div className="mt-10 flex flex-col items-start justify-start gap-6">
@@ -113,8 +113,8 @@ const LandingPage: React.FC = () => {
                     </div>
 
                     {/* FAQs Section */}
-                    <div className='js-scroll md:mb-10 px-4 mx-auto w-full sm:max-w-screen-xl py-5 lg:px-8 scrolled'>
-                        <h2 className='text-3xl font-bold mb-6 mx-auto text-left sm:text-4xl dark:text-white'>FAQs</h2>
+                    <div className='js-scroll md:mb-10 px-4 mx-auto w-full sm:max-w-screen-xl lg:my-7 py-5 lg:px-8 scrolled'>
+                        <h2 className='font-bold mb-6 mx-auto text-center lg:text-5xl text-3xl dark:text-white'>FAQs</h2>
                         <div className='flex flex-col gap-4'>
                             <div className='bg-gray-50 rounded-lg hover:bg-gray-100 dark:bg-zinc-950 py-2 md:px-7 px-4'>
                                 <Accordion type="single" collapsible>
@@ -144,7 +144,7 @@ const LandingPage: React.FC = () => {
                                 <Accordion type="single" collapsible>
                                     <AccordionItem value="item-1">
                                         <AccordionTrigger className="font-bold text-lg px-0.5">Are there more presentation designs available?</AccordionTrigger>
-                                        <AccordionContent className=" leading-normal text-gray-800 dark:text-white text-base">
+                                        <AccordionContent className="leading-normal text-gray-800 dark:text-white text-base">
                                             <span>
                                                 From time to time, we’ll be adding more designs. If you feel like you want to do things yourself and don’t want to rely on an AI, you’re on PromptSlide, the leading website when it comes to presentation templates.
                                             </span>

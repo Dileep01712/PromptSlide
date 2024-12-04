@@ -13,6 +13,11 @@ const App: React.FC = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isPPTEditingExpanded, setIsPPTEditingExpanded] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleBarIcon = () => {
+    setIsOpen(!isOpen);
+  }
 
   const toggleIcon = () => {
     setIsDarkMode(!isDarkMode);
@@ -26,7 +31,7 @@ const App: React.FC = () => {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <Router>
-        <MainLayout isDarkMode={isDarkMode} toggleIcon={toggleIcon}>
+        <MainLayout isDarkMode={isDarkMode} toggleIcon={toggleIcon} isOpen={isOpen} toggleBarIcon={toggleBarIcon} setIsOpen={setIsOpen}>
           <Routes>
             <Route path='/' element={<LandingPage />} />
             <Route

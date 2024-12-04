@@ -3,6 +3,7 @@ import { ReactTyped } from 'react-typed';
 import { Button } from '../ui/button';
 import CommonFooter from '../Footer/CommonFooter';
 import UserInputModal from '../Modal/UserInputModal';
+import { MeshGradientRenderer } from '@johnn-e/react-mesh-gradient';
 
 const CreatePresentation: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -43,30 +44,42 @@ const CreatePresentation: React.FC = () => {
 
     return (
         <>
-            <div className="bg-[radial-gradient(circle_at_center,_#ffba27,_#6ec3f4,_#ef008f,_#7038ff)] h-screen animate-gradient-x">
+            <MeshGradientRenderer
+                className="gradient h-screen w-full opacity-90"
+                colors={[
+                    '#a960ee', // Medium Purple
+                    '#ff333d', // Coral Red
+                    '#90e0ff', // Anakiwa
+                    '#ffcb57', // Golden Tainoi
+                    '#9b72cf',
+                ]}
+            />
+            <div className="h-screen">
                 <div className="absolute w-full mx-auto">
 
                     {/* Main Content */}
                     <div className="relative z-10 flex flex-col items-center mx-auto">
-                        <div className='md:my-12 md:px-0 px-4 py-4'>
-                            <h1 className="font-Degular h-36 md:h-auto text-gradient font-bold lg:text-5xl text-3xl text-center">
-                                <ReactTyped
-                                    strings={[
-                                        'Unleash your ideas with Stunning Presentations',
-                                        'Transform your concepts into Captivating Presentations',
-                                        'Turn ideas into Engaging Stories with Slides',
-                                        'Achieve Presentation Perfection in minutes',
-                                        'Craft Professional Presentations effortlessly'
-                                    ]}
-                                    typeSpeed={70}
-                                    backSpeed={40}
-                                    backDelay={1500}
-                                    loop={true}
-                                />
-                            </h1>
+                        <div className='md:my-20 mb-20 mt-14 md:px-0 px-4 py-4'>
+                            <div className='h-32 md:w-[800px]'>
+                                <h1 className="font-Degular md:h-auto font-bold lg:text-5xl text-3xl text-center">
+                                    <ReactTyped
+                                        strings={[
+                                            'Unleash your ideas with Stunning Presentations',
+                                            'Transform your concepts into Captivating Presentations',
+                                            'Turn ideas into Engaging Stories with Slides',
+                                            'Achieve Presentation Perfection in minutes',
+                                            'Craft Professional Presentations effortlessly'
+                                        ]}
+                                        typeSpeed={60}
+                                        backSpeed={70}
+                                        backDelay={1700}
+                                        loop={true}
+                                    />
+                                </h1>
+                            </div>
 
                             {/* Second heading with typing effect */}
-                            <h1 className="font-Degular text-white lg:text-3xl text-xl text-center">
+                            <h1 className="font-Degular lg:text-3xl text-xl text-center">
                                 Effortless PowerPoint Templates, Tailored for you
                             </h1>
                         </div>
@@ -77,12 +90,12 @@ const CreatePresentation: React.FC = () => {
                             {/* Modal Toggle button */}
                             <>
                                 <h3 className='flex flex-col sm:flex-row justify-center items-center text-white py-2 md:py-0'>
-                                    <span className='text-center md:mr-4 text-lg'>Transform your next idea into reality with</span>
-                                    <Button type="button" onClick={handleToggleModal} className="relative overflow-hidden rounded h-10 px-4 mt-4 md:mt-0 text-base text-gray-900 font-semibold bg-white hover:bg-gradient-to-l from-indigo-500 to-white transition-colors duration-0" onMouseEnter={handleMouseEnter}
+                                    <span className='text-center md:mr-4 text-xl text-white'>Transform your next idea into reality with</span>
+                                    <Button type="button" onClick={handleToggleModal} className="relative overflow-hidden rounded h-10 px-4 mt-4 md:mt-0 text-base font-semibold hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500" onMouseEnter={handleMouseEnter}
                                         onMouseLeave={() => setIsHovered(false)}>
 
                                         {/* Button Content */}
-                                        <span className={`relative flex items-center transition-all duration-500 text-gray-900 z-10`}>
+                                        <span className={`relative flex items-center z-10`}>
                                             <svg className={`size-4 mr-2 fill-current z-10 overflow-visible`} width="16" height="16"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -113,7 +126,6 @@ const CreatePresentation: React.FC = () => {
 
             {/* Page Footer */}
             < CommonFooter />
-
         </ >
     );
 }

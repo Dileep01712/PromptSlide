@@ -1,29 +1,47 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from '../ui/button';
 import { useNavigation } from "../Navigation/Navigate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 import { BrightnessHigh, MoonStarsFill } from "react-bootstrap-icons";
 
 interface LandingPageNavbarProps {
     isDarkMode: boolean;
     toggleIcon: () => void;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+    toggleBarIcon: () => void;
 }
 
-const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({isDarkMode, toggleIcon }) => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isLargeScreen] = useState(window.innerWidth >= 1024);
+const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
+    isDarkMode,
+    toggleIcon,
+    isOpen,
+    setIsOpen,
+    toggleBarIcon
+}) => {
     const { handleButtonClick } = useNavigation();
-    const [showButtons, setShowButtons] = useState(false);
+    const [isLargeScreen] = useState(window.innerWidth >= 1024);
     const dropdownRef = useRef<HTMLDivElement>(null); // Ref for the dropdown  
+    const [showButtons, setShowButtons] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const isScrolledRef = useRef(false);
 
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 0) {
-                setIsScrolled(true);
+                if (!isScrolledRef.current) {
+                    isScrolledRef.current = true;
+                    setIsScrolled(true);
+                    setIsOpen(false);
+                }
                 setShowButtons(false);
+                setIsOpen(false);
             } else {
-                setIsScrolled(false);
+                if (isScrolledRef.current) {
+                    isScrolledRef.current = false;
+                    setIsScrolled(false);
+                }
             }
         };
 
@@ -32,29 +50,25 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({isDarkMode, toggle
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, []);
+    }, [showButtons, setIsOpen]);
 
-    const handleToggleButtons = () => {
-        if (isScrolled) {
-            setShowButtons(false);
-        } else {
-            setShowButtons(!showButtons);
-        }
+    const handleToggleBarButtons = () => {
+        setShowButtons((prevState) => !prevState);
     };
 
-    const handleClickOutside = (event: MouseEvent) => {
-        // Close the dropdown if clicking outside of it  
+    const handleClickOutside = useCallback((event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setShowButtons(false);
+            setIsOpen(false);
         }
-    };
+    }, [setShowButtons, setIsOpen]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [handleClickOutside]);
 
     return (
         <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
@@ -86,13 +100,31 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({isDarkMode, toggle
                     </>
                 ) : (
                     <>
-                        <div className="relative" ref={dropdownRef}> {/* Attach ref here */}
-                            <FontAwesomeIcon icon={faBars} fontSize={"20px"} onClick={handleToggleButtons} />
+                        {/* Small Screen */}
+                        <div className="relative" ref={dropdownRef}>
+                            <div onClick={handleToggleBarButtons}>
+                                {isOpen ? (
+                                    <FontAwesomeIcon icon={faX} fontSize={"20px"} onClick={toggleBarIcon} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faBars} fontSize={"20px"} onClick={toggleBarIcon} />
+                                )}
+                            </div>
                             {showButtons && (
-                                <div className="absolute top-11 transform -translate-x-full z-50 rounded-lg shadow-xl p-5 w-min transition-all duration-300 bg-blue-100">
-                                    <div className="flex flex-row items-center h-40">
-                                        <Button className="font-Degular text-md mx-7">Log in</Button>
-                                        <Button className="font-Degular text-md mx-7">Sign Up</Button>
+                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-lg p-6 border border-gray-300 dark:border-gray-700 w-min transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
+                                    <div className="flex w-64">
+                                        <div className='mx-auto' onClick={toggleIcon}>
+                                            {isDarkMode ? (
+                                                <Button>
+                                                    <BrightnessHigh size={"24px"} />
+                                                </Button>
+                                            ) : (
+                                                <Button>
+                                                    <MoonStarsFill size={"24px"} />
+                                                </Button>
+                                            )}
+                                        </div>
+                                        <Button className="font-Degular text-md mx-auto" onClick={() => handleButtonClick('/login')}>Log in</Button>
+                                        <Button className="font-Degular text-md mx-auto" onClick={() => handleButtonClick('/signup')}>Sign Up</Button>
                                     </div>
                                 </div>
                             )}

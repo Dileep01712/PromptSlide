@@ -33,7 +33,7 @@ const CommonTooltip: React.FC<CommonTooltipProps> = ({
     };
 
     return (
-        <div className="relative flex items-center"
+        <div className="relative flex items-center select-none"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -41,7 +41,7 @@ const CommonTooltip: React.FC<CommonTooltipProps> = ({
                 {children}
             </div>
             {isHovered && (
-                <div className="absolute bg-zinc-950 dark:bg-zinc-700 text-white text-xs text-center rounded p-2 inline-block" style={tooltipStyles}>
+                <div className="hidden md:inline-block absolute bg-zinc-950 dark:bg-zinc-700 text-white text-xs text-center rounded p-2" style={tooltipStyles}>
                     {text}
                 </div>
             )}

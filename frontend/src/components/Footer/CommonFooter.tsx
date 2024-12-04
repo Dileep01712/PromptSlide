@@ -5,8 +5,8 @@ const CommonFooter: React.FC = () => {
     const { handleButtonClick } = useNavigation();
 
     return (
-        <footer className="z-10" >
-            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-gray-300 dark:bg-zinc-950 dark:text-white dark:border-t'>
+        <footer className="z-10">
+            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-white dark:bg-zinc-950 dark:text-whitew'>
                 <div className='container mx-auto'>
                     <div className='flex flex-wrap'>
 
@@ -27,7 +27,7 @@ const CommonFooter: React.FC = () => {
                             <div className="flex flex-wrap items-center justify-start mb-2 sm:grid sm:gap-2 sm:grid-cols-3 xl:grid-cols-4">
 
                                 {/* P Icon */}
-                                <a href="https://www.pinterest.es" target="_blank" rel="noreferrer" className="bg-pinterest rounded flex items-center justify-center p-2 bg-red-800 hover:bg-red-700 mr-2 sm:mr-0 focus:outline-none share">
+                                <a href="https://www.pinterest.es" target="_blank" rel="noreferrer" className="bg-pinterest rounded flex items-center justify-center p-2 bg-red-700 hover:bg-red-600 mr-2 sm:mr-0 focus:outline-none share">
                                     <svg className="fill-current h-5 w-5 text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <title>Pinterest Icon</title>
                                         <path d="M12.053 0.237061C5.513 0.237061 0.184998 5.53806 0.184998 12.1051C0.184998 17.1161 3.323 21.4151 7.727 23.1561C7.622 22.2061 7.543 20.7821 7.78 19.7541C7.991 18.8311 9.178 13.8461 9.178 13.8461C9.178 13.8461 8.835 13.1341 8.835 12.0791C8.835 10.4181 9.785 9.20406 10.971 9.20406C11.974 9.20406 12.475 9.96906 12.475 10.8661C12.475 11.8951 11.815 13.3981 11.499 14.8221C11.209 16.0091 12.079 16.9581 13.266 16.9581C15.376 16.9581 16.985 14.7431 16.985 11.5251C16.985 8.67706 14.954 6.69906 12.026 6.69906C8.651 6.69906 6.673 9.23106 6.673 11.8421C6.673 12.8701 7.068 13.9521 7.543 14.5581C7.648 14.6641 7.648 14.7691 7.622 14.9011C7.542 15.2711 7.332 16.0881 7.305 16.2461C7.253 16.4571 7.121 16.5101 6.91 16.4041C5.433 15.7191 4.51 13.5561 4.51 11.8151C4.51 8.07006 7.226 4.64206 12.343 4.64206C16.457 4.64206 19.648 7.56906 19.648 11.4991C19.648 15.5871 17.064 18.8841 13.503 18.8841C12.29 18.8841 11.183 18.2511 10.787 17.5121C10.787 17.5121 10.18 19.7801 10.048 20.3341C9.785 21.3631 9.046 22.6541 8.571 23.4461C9.679 23.7891 10.866 23.9741 12.079 23.9741C18.619 23.9741 23.947 18.6731 23.947 12.1051C23.895 5.53806 18.593 0.237061 12.053 0.237061Z"></path>
@@ -35,7 +35,7 @@ const CommonFooter: React.FC = () => {
                                 </a>
 
                                 {/* T Icon */}
-                                <a href="https://twitter.com" target="_blank" rel="noreferrer" className="bg-twitter rounded flex items-center justify-center p-2 bg-gray-100 hover:bg-gray-50 mr-2 sm:mr-0 focus:outline-none share">
+                                <a href="https://twitter.com" target="_blank" rel="noreferrer" className="bg-twitter rounded flex items-center justify-center p-2 bg-gray-200 hover:bg-gray-50 mr-2 sm:mr-0 focus:outline-none share">
                                     <svg className="fill-current h-5 w-5 text-black" version="1.1" id="svg5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1668.56 1221.19" xmlSpace="preserve">
                                         <title>Twitter Icon</title>
                                         <g id="layer1" transform="translate(52.390088,-25.058597)">
@@ -45,7 +45,7 @@ const CommonFooter: React.FC = () => {
                                 </a>
 
                                 {/* IG Icon */}
-                                <a href="https://www.instagram.com" target="_blank" rel="noreferrer" className="bg-instagram rounded flex items-center justify-center p-2 bg-instagram-gradient hover:opacity-95 mr-2 sm:mr-0 focus:outline-none share">
+                                <a href="https://www.instagram.com" target="_blank" rel="noreferrer" className="bg-instagram rounded flex items-center justify-center p-2 bg-instagram-gradient hover:bg-instagram-gradient-light hover:opacity-100 mr-2 sm:mr-0 focus:outline-none share">
                                     <svg className="fill-current h-5 w-5 text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <title>Instagram Icon</title>
                                         <g clipPath="url(#clip0_2224_13585)">

@@ -21,6 +21,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { handleButtonClick } = useNavigation();
 
+    // Number of Slides: Warning
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value, 10); // Ensure the value is treated as a number
 
@@ -28,8 +29,8 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         setSlideCount(value);
 
         // Display a warning if the value is outside the range
-        if (value < 6 || value > 14) {
-            setWarningA('The number should be between 6 and 14.');
+        if (value < 6 || value > 15) {
+            setWarningA('The number should be between 6 and 15.');
         } else {
             setWarningA('');
         }
@@ -43,7 +44,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         }, 300);
     };
 
-
+    // Upload files: Warning
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
 
@@ -104,8 +105,8 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
     return (
         <>
             {isOpen && (
-                <div className="fixed top-0 right-0 left-0 p-4 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/60 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-9/12 md:mt-32 mt-60 ">
+                <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/60 overflow-y-auto">
+                    <div className="lg:w-1/2 md:w-9/12 md:mt-32 mt-48 ">
                         {/* Modal content */}
                         <div className="relative py-8 px-6 sm:px-8 bg-white rounded-lg shadow dark:bg-gray-700">
 
@@ -124,15 +125,15 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 {/* Modal Input Prompt */}
                                 <div>
                                     <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Topic</h3>
-                                    <input type="text" className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full mb-3 text-black focus:outline-none" placeholder="The negative effects of social media" />
+                                    <input type="text" className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full mb-3 text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
                                 </div>
 
                                 {/* Modal Language Dropdown List */}
                                 <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-10 flex-wrap">
-
+                                    {/* Writing Tone */}
                                     <div>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Writing tone</h3>
-                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 font-semibold text-sm">
+                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm">
                                             <option>Unspecified</option>
                                             <option value="Fun">Fun</option>
                                             <option value="Creative">Creative</option>
@@ -142,9 +143,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </select>
                                     </div>
 
+                                    {/* Language */}
                                     <div className='flex-1'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Language</h3>
-                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 font-semibold text-sm">
+                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm">
                                             <option>Auto</option>
                                             <option value="en">English</option>
                                             <option value="hi">हिन्दी</option>
@@ -174,9 +176,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </select>
                                     </div>
 
+                                    {/* Number of Slides */}
                                     <div className='flex-1 lg:flex-0'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
-                                        <input type="number" required autoComplete="off" value={slideCount} onChange={handleInputChange} className="pl-4 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 font-semibold text-sm" />
+                                        <input type="number" required autoComplete="off" value={slideCount} onChange={handleInputChange} className="pl-4 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
                                         {warningA && (
                                             <p className={`text-red-600 text-xs mt-2 absolute ${warningA ? 'visible' : 'invisible'}`}>{warningA}</p>
@@ -235,10 +238,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 {/* Modal Themes Buttons */}
                                 <div>
                                     <h2 className='text-lg text-black dark:text-white font-semibold mb-2'>Style</h2>
-                                    <div className="justify-between mb-4">
+                                    <div className="justify-between md:mb-4">
 
                                         {/* Dropdown for small devices */}
-                                        <div className="sm:hidden mb-4">
+                                        <div className="sm:hidden mb-3">
                                             <select className="border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} // Keep the selected option in sync with the active div
                                             >
                                                 <option value={1}>Essential Aesthetics</option>
@@ -281,7 +284,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 </div>
 
                                 {/* Modal Generate Button */}
-                                <Button type='submit' className="flex bg-zinc-950 text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 mt-6" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('/ppt-editing')}>
+                                <Button type='submit' className="flex bg-zinc-950 text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('/ppt-editing')}>
                                     <span className="flex items-center justify-center gap-2 font-Degular text-xl">
                                         <svg className="fill-current h-7 mt-2" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
                                             <path
