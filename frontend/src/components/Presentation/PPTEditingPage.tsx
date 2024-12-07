@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { Button } from "../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight, faChevronDown, faChevronUp, faCopy, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { FileEarmarkPlus, Files, FilesAlt } from "react-bootstrap-icons";
+import { Files, FilesAlt } from "react-bootstrap-icons";
 import CommonTooltip from "../Tooltip/CommonTooltip";
 
 interface PPTEditingPageProps {
@@ -131,7 +131,6 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
         carousel.scrollTo({ left: offset, behavior: 'smooth' });
     }, [activeImageIndex]);
 
-
     return (
         <div className="flex lg:h-full w-full flex-col-reverse lg:flex-1 lg:flex-row overflow-hidden" style={{ height: 'var(--content-height)' }}>
             <Sidebar isSidebarExpanded={isSidebarExpanded} setIsSidebarExpanded={setIsSidebarExpanded} />
@@ -146,19 +145,14 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
 
                         <div className={`lg:p-7 md:min-h-[451px] min-h-[360px] flex flex-col items-center justify-center overflow-auto ${isPPTEditingExpanded ? 'lg:p-5' : ''}`}>
                             {/* Centered buttons */}
-                            <div className="relative flex items-center justify-center gap-3 px-3 py-2.5" style={{ width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : 0))}%`, minWidth: '20%' }}>
+                            <div className="relative flex items-center justify-center gap-3 px-3 pt-2 pb-1" style={{ width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : 0))}%`, minWidth: '20%' }}>
                                 <div className="flex content-center items-center gap-4">
                                     <p>Page 1</p>
                                 </div>
                                 <div className="ml-auto flex items-center z-10 gap-3">
-                                    <CommonTooltip text="Duplicate Page" width={97} negativeY={36} negativeLeft={38}>
+                                    <CommonTooltip text="Duplicate" width={65} negativeY={36} negativeLeft={38}>
                                         <div className="hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer">
                                             <FontAwesomeIcon icon={faCopy} fontSize="20px" />
-                                        </div>
-                                    </CommonTooltip>
-                                    <CommonTooltip text="Add Page" width={71} negativeY={36} negativeLeft={22}>
-                                        <div className="hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer">
-                                            <FileEarmarkPlus size='20px' />
                                         </div>
                                     </CommonTooltip>
                                     <CommonTooltip text="Delete" width={55} negativeY={36} negativeLeft={16}>
@@ -179,7 +173,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                     minHeight: '20%', // Ensure the minimum height is 20%
                                     maxHeight: '500%' // Ensure the maximum height is 500%
                                 }}>
-                                <img src="./src/assets/UserInput/preview.png" className="rounded  w-full max-w-full" />
+                                <img src="./src/assets/UserInput/preview.png" className="rounded w-full max-w-full" />
                             </div>
                         </div>
                     </div>
@@ -265,7 +259,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                     ) : (
                         <>
                             {/* Bottom PPT Panel */}
-                            <div className="hidden md:flex absolute bottom-0 md:right-0 md:left-0 z-10 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 bg-gray-50 dark:bg-zinc-900 md:h-auto md:w-auto h-auto w-[360px] transition-all duration-500">
+                            <div className="hidden md:flex absolute bottom-0 md:right-0 md:left-0 z-10 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 bg-gray-50 dark:bg-zinc-900 md:h-auto md:w-auto h-auto w-[360px]">
 
                                 {/* Bottom PPT Preview  */}
                                 <div className={`transition-all duration-500 ${isPPTEditingExpanded ? 'h-32' : 'h-0'}`}>

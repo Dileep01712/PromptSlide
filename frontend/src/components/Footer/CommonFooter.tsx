@@ -5,8 +5,8 @@ const CommonFooter: React.FC = () => {
     const { handleButtonClick } = useNavigation();
 
     return (
-        <footer className="z-10">
-            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-white dark:bg-zinc-950 dark:text-whitew'>
+        <footer>
+            <div className='pt-8 pb-1 sm:pt-10 bg-gray-950 text-white dark:bg-zinc-950 border-transparent border-t-2 dark:border-slate-800'>
                 <div className='container mx-auto'>
                     <div className='flex flex-wrap'>
 

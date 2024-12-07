@@ -59,7 +59,7 @@ const CreatePresentation: React.FC = () => {
 
                     {/* Main Content */}
                     <div className="relative z-10 flex flex-col items-center mx-auto">
-                        <div className='md:my-20 mb-20 mt-14 md:px-0 px-4 py-4'>
+                        <div className='md:my-20 mb-20 mt-14 md:px-0 p-4'>
                             <div className='h-32 md:w-[800px]'>
                                 <h1 className="font-Degular md:h-auto font-bold lg:text-5xl text-3xl text-center">
                                     <ReactTyped
@@ -85,7 +85,7 @@ const CreatePresentation: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className='flex flex-col sm:flex-row justify-center items-center mx-auto py-5 md:py-8 relative px-4 lg:px-8'>
+                    <div className='flex flex-col sm:flex-row justify-center items-center mx-auto md:py-8 relative p-4 lg:px-8'>
                         <div>
                             {/* Modal Toggle button */}
                             <>

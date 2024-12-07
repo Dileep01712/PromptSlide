@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
                             </div>
 
                             {showTools && (
-                                <div className="bg-gray-200 dark:bg-zinc-800 flex items-center justify-between h-[400px] w-[360px] absolute bottom-18 -left-3 right-0 z-20 rounded-t-2xl">
+                                <div className={`bg-gray-200 dark:bg-zinc-800 flex items-center justify-between h-[400px] w-[360px] absolute bottom-18 -left-3 right-0 z-20 rounded-t-2xl`}>
                                     <div className="h-full w-full">
                                         {/* Close Button */}
                                         <div className="flex items-center justify-end h-12 px-4 w-full">

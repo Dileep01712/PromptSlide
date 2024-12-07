@@ -110,7 +110,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                                 )}
                             </div>
                             {showButtons && (
-                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-lg p-6 border border-gray-300 dark:border-gray-700 w-min transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
+                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-2xl p-6 border border-gray-300 dark:border-gray-700 w-min transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
                                     <div className="flex w-64">
                                         <div className='mx-auto' onClick={toggleIcon}>
                                             {isDarkMode ? (

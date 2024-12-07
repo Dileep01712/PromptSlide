@@ -56,7 +56,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 setWarningB("You can only upload up to 2 files.");
                 setTimeout(() => {
                     setWarningB('');
-                }, 7000);
+                }, 8000);
                 return;
             }
 
@@ -64,10 +64,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 // Check if file size exceeds 20MB
                 const fileSizeMB = file.size / (1024 * 1024);
                 if (fileSizeMB > 20) {
-                    setWarningB(`File "${file.name}" is larger than 20MB and cannot be uploaded.`);
+                    setWarningB("File is larger than 20MB can't be uploaded.");
                     setTimeout(() => {
                         setWarningB('');
-                    }, 7000);
+                    }, 8000);
                     return false;
                 }
                 return true;
@@ -105,10 +105,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
     return (
         <>
             {isOpen && (
-                <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/60 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-9/12 md:mt-32 mt-48 ">
+                <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/50 overflow-y-auto">
+                    <div className="lg:w-1/2 md:w-9/12 md:mt-32 mt-52">
                         {/* Modal content */}
-                        <div className="relative py-8 px-6 sm:px-8 bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div className="relative py-8 px-6 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
 
                             {/* Modal header */}
                             <div className="flex items-center justify-between mb-4">
@@ -129,7 +129,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 </div>
 
                                 {/* Modal Language Dropdown List */}
-                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-10 flex-wrap">
+                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-7 flex-wrap">
                                     {/* Writing Tone */}
                                     <div>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Writing tone</h3>
@@ -179,7 +179,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                     {/* Number of Slides */}
                                     <div className='flex-1 lg:flex-0'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
-                                        <input type="number" required autoComplete="off" value={slideCount} onChange={handleInputChange} className="pl-4 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm" />
+                                        <input type="number" required autoComplete="off" value={slideCount} onChange={handleInputChange} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
                                         {warningA && (
                                             <p className={`text-red-600 text-xs mt-2 absolute ${warningA ? 'visible' : 'invisible'}`}>{warningA}</p>
@@ -189,11 +189,11 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 </div>
 
                                 {/* Modal Upload Files */}
-                                <div className="mb-3 md:h-24 md:pb-0 pb-8">
+                                <div className="mb-8 md:h-24 md:pb-0 h-fit">
                                     <div className="flex justify-between">
                                         <div className="flex">
                                             <h3 className="md:text-lg text-base mb-1 mr-1 text-black dark:text-white font-semibold">
-                                                Upload files <span className="text-sm text-gray-600 font-Degular">(optional)</span>
+                                                Upload files <span className="text-sm text-gray-600 dark:text-gray-300 font-Degular">(optional)</span>
                                             </h3>
                                             <ModalTooltip text="Share more details about this topic by uploading a PDF/Word, Max 2 files">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} className="h-5 w-5 cursor-pointer">
@@ -203,21 +203,21 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row mt-2">
+                                    <div className="flex flex-col sm:flex-row md:mt-2 mt-1">
                                         {/* Hidden file input */}
                                         <input type="file" accept=".pdf, .doc, .docx" multiple onChange={handleFileChange} ref={fileInputRef} className="hidden" />
 
                                         {/* Button to trigger file input */}
-                                        <Button onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border h-8 text-sm w-fit sm:mr-2 mb-2 sm:mb-0">
+                                        <Button onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border h-9 text-sm w-fit sm:mr-2 sm:mb-0">
                                             Upload File
                                         </Button>
 
                                         {/* List of uploaded files */}
-                                        <div className="flex flex-wrap md:justify-center w-full md:mt-0 mt-2">
+                                        <div className="flex flex-wrap md:justify-center w-full md:mt-0">
                                             {uploadedFiles.length > 0 && (
-                                                <ul className="flex flex-wrap gap-3">
+                                                <ul className="flex flex-wrap gap-3 mt-2 h-fit">
                                                     {uploadedFiles.map((file, index) => (
-                                                        <li key={index} className="flex items-center justify-between bg-gray-200 p-1 rounded h-8 w-full sm:w-auto">
+                                                        <li key={index} className="flex items-center justify-between bg-gray-200 dark:bg-gray-950 p-1 rounded h-9 w-full sm:w-auto">
                                                             <span className="text-sm">{file.name}</span>
                                                             <Button variant='outline' className="ml-2 rounded-full w-5 h-5 flex items-center justify-center p-2.5" onClick={() => handleRemoveFile(index)}>
                                                                 &#10005; {/* X Button */}
@@ -241,8 +241,8 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                     <div className="justify-between md:mb-4">
 
                                         {/* Dropdown for small devices */}
-                                        <div className="sm:hidden mb-3">
-                                            <select className="border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} // Keep the selected option in sync with the active div
+                                        <div className="sm:hidden mb-3 dark:text-black">
+                                            <select className="pl-4 border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} // Keep the selected option in sync with the active div
                                             >
                                                 <option value={1}>Essential Aesthetics</option>
                                                 <option value={2}>Dynamic Colors</option>
@@ -284,7 +284,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 </div>
 
                                 {/* Modal Generate Button */}
-                                <Button type='submit' className="flex bg-zinc-950 text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('/ppt-editing')}>
+                                <Button type='submit' className="flex bg-zinc-950 dark:bg-slate-100 dark:text-black dark:hover:text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('/ppt-editing')}>
                                     <span className="flex items-center justify-center gap-2 font-Degular text-xl">
                                         <svg className="fill-current h-7 mt-2" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
                                             <path
