@@ -77,12 +77,12 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
         }
     };
 
-    // Function to handle number of slides input
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     const handleSlideCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSlideCount(Number(event.target.value));
     };
-
+    handleSlideCountChange;
+    
     const handleClickOutside = useCallback((event: MouseEvent) => {
         if (
             dropdownRef.current &&
@@ -150,7 +150,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                     <p>Page 1</p>
                                 </div>
                                 <div className="ml-auto flex items-center z-10 gap-3">
-                                    <CommonTooltip text="Duplicate" width={65} negativeY={36} negativeLeft={38}>
+                                    <CommonTooltip text="Duplicate" width={65} negativeY={36} negativeLeft={23}>
                                         <div className="hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer">
                                             <FontAwesomeIcon icon={faCopy} fontSize="20px" />
                                         </div>

@@ -26,11 +26,12 @@ const CommonTooltip: React.FC<CommonTooltipProps> = ({
     const [isHovered, setIsHovered] = useState(false);
 
     const tooltipStyles = {
-        left: positiveLeft !== undefined ? `${positiveLeft}px` : negativeLeft !== undefined ? `-${negativeLeft}px` : 'auto',
-        transform: `translate(${positiveX !== undefined ? positiveX : -negativeX || 0}px, ${positiveY !== undefined ? positiveY : -negativeY || 0}px)`,
+        left: positiveLeft !== undefined ? `${positiveLeft}px` : negativeLeft !== undefined
+            ? `-${negativeLeft}px` : 'auto', transform: `translate(${positiveX !== undefined ? positiveX : negativeX !== undefined ? -negativeX : 0}px, ${positiveY !== undefined ? positiveY : negativeY !== undefined ? -negativeY : 0}px )`,
         width: typeof width === 'number' ? `${width}px` : width || 'auto',
-        minWidth: '100%' // Prevents the tooltip from overflowing
+        minWidth: '100%',
     };
+
 
     return (
         <div className="relative flex items-center select-none"
