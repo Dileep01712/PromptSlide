@@ -74,7 +74,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
         <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
             <div className="flex items-center select-none" onClick={() => handleButtonClick('/')}>
                 <div className='flex justify-center items-center cursor-pointer w-10 lg:w-fit'>
-                    <img src="./src/assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
+                    <img src="./assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
                 </div>
                 <div className='inline-block pl-2 cursor-pointer'>
                     <span className="font-Varino font-bold lg:text-2xl text-black dark:text-white">

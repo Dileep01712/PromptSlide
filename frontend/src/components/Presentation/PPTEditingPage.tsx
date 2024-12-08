@@ -173,7 +173,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                     minHeight: '20%', // Ensure the minimum height is 20%
                                     maxHeight: '500%' // Ensure the maximum height is 500%
                                 }}>
-                                <img src="./src/assets/UserInput/preview.png" className="rounded w-full max-w-full" />
+                                <img src="./assets/UserInput/preview.png" className="rounded w-full max-w-full" />
                             </div>
                         </div>
                     </div>
@@ -297,7 +297,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                                                             <div className="flex flex-row w-full">
                                                                                 <div className="flex flex-row">
                                                                                     <div className={`h-fit md:w-44 w-36 overflow-hidden contain-layout rounded-md ${activeImageIndex === index ? 'border-2 border-purple-500' : 'border-2 border-transparent'}`} onClick={() => handleImageClick(index)}>
-                                                                                        <img src="./src/assets/Landing/features1.webp" alt={`Slide ${index + 1}`} className="rounded md:h-28 md:w-44 w-auto" />
+                                                                                        <img src="./assets/Landing/features1.webp" alt={`Slide ${index + 1}`} className="rounded md:h-28 md:w-44 w-auto" />
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

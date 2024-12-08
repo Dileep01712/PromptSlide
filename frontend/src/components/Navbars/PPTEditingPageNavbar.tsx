@@ -80,7 +80,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                 {/* Navbar Logo */}
                 <div className="flex items-center select-none w-fit mr-auto" onClick={() => handleButtonClick('/')}>
                     <div className='flex justify-center items-center cursor-pointer w-10 lg:w-fit'>
-                        <img src="./src/assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
+                        <img src="./assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
                     </div>
                     <div className='inline-block pl-2 cursor-pointer'>
                         <span className="font-Varino font-bold lg:text-2xl text-black dark:text-white">

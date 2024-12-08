@@ -16,7 +16,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -32,7 +32,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -48,7 +48,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -64,7 +64,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -80,7 +80,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -96,7 +96,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features1.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -115,7 +115,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -131,7 +131,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -147,7 +147,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -163,7 +163,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -179,7 +179,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -195,7 +195,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features2.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -214,7 +214,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -230,7 +230,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -246,7 +246,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -262,7 +262,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -278,7 +278,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -294,7 +294,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/features3.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -313,7 +313,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -329,7 +329,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -345,7 +345,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -361,7 +361,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -377,7 +377,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -393,7 +393,7 @@ const Themes: React.FC<ThemesProps> = ({ activeDiv }) => {
 
                         <input x-model="activeStyle" className="hidden peer" type="radio" name="style" autoComplete="off" x-bind:value="childStyle.tagId" x-bind:data-cy="activeStyle == childStyle.tagId ? 'check-active-template' : null" value="94" data-cy="check-active-template" />
 
-                        <img src="./src/assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
+                        <img src="./assets/Landing/generated.webp" alt="Logo" className='border-2 w-full rounded peer-checked:border-blue-500 md:h-32' />
 
                         <span className="hidden absolute top-2.5 right-2.5 size-4 items-center justify-center bg-blue-500 rounded-sm peer-checked:flex">
                             <svg className="fill-current w-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">

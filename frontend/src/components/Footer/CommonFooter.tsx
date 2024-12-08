@@ -14,7 +14,7 @@ const CommonFooter: React.FC = () => {
                         <div className='flex flex-col items-center mb-8 w-full sm:items-start'>
                             <div className='flex items-center justify-center cursor-pointer select-none' onClick={() => handleButtonClick('/')}>
                                 <div className='flex items-end'>
-                                    <img src="./src/assets/Navbar/logo.webp" alt="Logo" className="w-auto h-10" />
+                                    <img src="./assets/Navbar/logo.webp" alt="Logo" className="w-auto h-10" />
                                 </div>
                                 <div className='inline-block pl-2 font-Varino text-textColor text-2xl'>PROMPTSLIDE</div>
                             </div>

@@ -33,7 +33,7 @@ const LandingPage: React.FC = () => {
                             </div>
                         </div>
                         <div className='flex flex-col gap-4 lg:col-span-1 pt-5 md:pt-0'>
-                            <img src="./src/assets/Landing/generated.webp" alt="Generated Logo" />
+                            <img src="./assets/Landing/generated.webp" alt="Generated Logo" />
                         </div>
                     </header>
 
@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
                         <div className="lg:grid lg:grid-cols-3 mx-auto max-w-screen-xl relative px-4 p-5 lg:px-8">
                             <div className="flex flex-col sm:text-center lg:col-span-1 p-6 bg-blue-100 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
-                                    <img src="./src/assets/Landing/features1.webp" alt="Logo" />
+                                    <img src="./assets/Landing/features1.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
                                     <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">AI-Powered Content Creation</h3>
@@ -54,7 +54,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
-                                    <img src="./src/assets/Landing/features2.webp" alt="Logo" />
+                                    <img src="./assets/Landing/features2.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
                                     <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Customizable Templates</h3>
@@ -65,7 +65,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
-                                    <img src="./src/assets/Landing/features3.webp" alt="Logo" className="h-56 object-fill w-full" />
+                                    <img src="./assets/Landing/features3.webp" alt="Logo" className="h-56 object-fill w-full" />
                                 </div>
                                 <div className='pt-6'>
                                     <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Easy Editing Tools</h3>

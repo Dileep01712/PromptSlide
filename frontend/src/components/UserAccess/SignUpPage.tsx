@@ -28,9 +28,9 @@ const RegisterPage: React.FC = () => {
             <div className="md:h-screen w-full mx-auto mb-4 dark:bg-zinc-950 flex items-center justify-center">
                 <div className="flex items-center justify-center">
                     <div className="flex-1 hidden md:block">
-                        <img src="../src/assets/UserAccess/register.webp" alt="Sign Up" className="w-[600px]" />
+                        <img src="../assets/UserAccess/register.webp" alt="Sign Up" className="w-[600px]" />
                     </div>
-                    <div className="flex-1 px-4">
+                    <div className="flex-1 px-4 border">
                         <form onSubmit={handleSubmit}>
                             <div className="pb-9">
                                 <h1 className="text-2xl font-bold mx-auto">Sign Up</h1>
@@ -82,7 +82,7 @@ const RegisterPage: React.FC = () => {
 
                             <div className="flex justify-center items-center mx-auto my-5 font-Lato">
                                 <Button onClick={() => login()} className="w-full">
-                                    <img src="../src/assets/UserAccess/google.svg" alt="Google Logo" className="h-6 mr-3" />
+                                    <img src="./assets/UserAccess/google.svg" alt="Google Logo" className="h-6 mr-3" />
                                     Sign Up with Google
                                 </Button>
                             </div>
