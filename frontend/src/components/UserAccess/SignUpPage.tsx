@@ -30,7 +30,7 @@ const RegisterPage: React.FC = () => {
                     <div className="flex-1 hidden md:block">
                         <img src="../assets/UserAccess/register.webp" alt="Sign Up" className="w-[600px]" />
                     </div>
-                    <div className="flex-1 px-4 border">
+                    <div className="flex-1 px-4">
                         <form onSubmit={handleSubmit}>
                             <div className="pb-9">
                                 <h1 className="text-2xl font-bold mx-auto">Sign Up</h1>
