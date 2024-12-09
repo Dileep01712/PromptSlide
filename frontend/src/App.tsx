@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import MainLayout from './components/Navigation/MainLayout';
 import LandingPage from './components/Presentation/LandingPage';
@@ -15,10 +15,12 @@ const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Toggle bar icon
   const toggleBarIcon = () => {
     setIsOpen(!isOpen);
   }
 
+  // Toggle dark mode
   const toggleIcon = () => {
     setIsDarkMode(!isDarkMode);
     if (!isDarkMode) {
@@ -27,6 +29,32 @@ const App: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   };
+
+  // Detect system dark/light mode and set the initial theme
+  useEffect(() => {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const setInitialTheme = (e: MediaQueryListEvent | MediaQueryList) => {
+      const isSystemDark = e.matches;
+      if (isSystemDark) {
+        document.documentElement.classList.add('dark');
+        setIsDarkMode(true);
+      }
+      else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    // Set theme on initial load
+    setInitialTheme(darkModeQuery);
+
+    // Add event listener for system theme changes
+    darkModeQuery.addEventListener('change', setInitialTheme);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      darkModeQuery.removeEventListener('change', setInitialTheme);
+    };
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">

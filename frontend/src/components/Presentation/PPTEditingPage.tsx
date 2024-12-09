@@ -224,7 +224,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                                                     <div className="flex flex-row w-full">
                                                                         <div className="flex flex-row">
                                                                             <div className={`h-fit md:w-44 w-36 overflow-hidden contain-layout rounded ${activeImageIndex === index ? 'border-2 border-purple-500' : 'border-2 border-transparent'}`} onClick={() => handleImageClick(index)}>
-                                                                                <img src="./src/assets/Landing/features1.webp" alt={`Slide ${index + 1}`} className="md:h-28 md:w-44 w-auto" />
+                                                                                <img src="./assets/Landing/features1.webp" alt={`Slide ${index + 1}`} className="md:h-28 md:w-44 w-auto" />
                                                                             </div>
                                                                         </div>
                                                                     </div>

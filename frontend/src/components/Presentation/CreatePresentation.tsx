@@ -9,6 +9,8 @@ const CreatePresentation: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [activeDiv, setActiveDiv] = useState(1);
+    const [typeSpeed, setTypeSpeed] = useState(60);
+    const [backSpeed, setBackSpeed] = useState(70);
 
     const handleToggleModal = () => {
         setIsOpen(!isOpen);
@@ -42,6 +44,27 @@ const CreatePresentation: React.FC = () => {
         };
     }, [isOpen]);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setTypeSpeed(0);
+                setBackSpeed(0);
+            }
+            else {
+                setTypeSpeed(60);
+                setBackSpeed(70);
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <>
             <MeshGradientRenderer
@@ -70,8 +93,8 @@ const CreatePresentation: React.FC = () => {
                                             'Achieve Presentation Perfection in minutes',
                                             'Craft Professional Presentations effortlessly'
                                         ]}
-                                        typeSpeed={60}
-                                        backSpeed={70}
+                                        typeSpeed={typeSpeed}
+                                        backSpeed={backSpeed}
                                         backDelay={1700}
                                         loop={true}
                                     />

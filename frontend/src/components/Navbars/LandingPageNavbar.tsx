@@ -33,10 +33,9 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                 if (!isScrolledRef.current) {
                     isScrolledRef.current = true;
                     setIsScrolled(true);
+                    setShowButtons(false); // Close dropdown on scroll
                     setIsOpen(false);
                 }
-                setShowButtons(false);
-                setIsOpen(false);
             } else {
                 if (isScrolledRef.current) {
                     isScrolledRef.current = false;
@@ -50,7 +49,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [showButtons, setIsOpen]);
+    }, [setIsOpen]);
 
     const handleToggleBarButtons = () => {
         setShowButtons((prevState) => !prevState);
@@ -58,10 +57,10 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            setShowButtons(false);
+            setShowButtons(false); // Close dropdown if clicked outside
             setIsOpen(false);
         }
-    }, [setShowButtons, setIsOpen]);
+    }, [setIsOpen]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -69,6 +68,12 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [handleClickOutside]);
+
+    // Handle button clicks to close the dropdown
+    const handleCloseDropdown = () => {
+        setShowButtons(false); // Close dropdown
+        setIsOpen(false);
+    };
 
     return (
         <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
@@ -112,7 +117,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                             {showButtons && (
                                 <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-2xl p-6 border border-gray-300 dark:border-gray-700 w-min transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
                                     <div className="flex w-64">
-                                        <div className='mx-auto' onClick={toggleIcon}>
+                                        <div className='mx-auto' onClick={() => { toggleIcon(); handleCloseDropdown() }}>
                                             {isDarkMode ? (
                                                 <Button>
                                                     <BrightnessHigh size={"24px"} />
@@ -123,8 +128,8 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                                                 </Button>
                                             )}
                                         </div>
-                                        <Button className="font-Degular text-md mx-auto" onClick={() => handleButtonClick('/login')}>Log in</Button>
-                                        <Button className="font-Degular text-md mx-auto" onClick={() => handleButtonClick('/signup')}>Sign Up</Button>
+                                        <Button className="font-Degular text-md mx-auto" onClick={() => { handleButtonClick('/login'); handleCloseDropdown(); }}>Log in</Button>
+                                        <Button className="font-Degular text-md mx-auto" onClick={() => { handleButtonClick('/signup'); handleCloseDropdown(); }}>Sign Up</Button>
                                     </div>
                                 </div>
                             )}

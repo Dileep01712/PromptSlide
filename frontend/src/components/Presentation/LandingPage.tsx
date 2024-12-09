@@ -20,7 +20,7 @@ const LandingPage: React.FC = () => {
                 <div className="pb-14 relative flex flex-col sm:z-0 sm:mt-0 bg-white dark:bg-zinc-950">
                     {/* Header Section */}
                     <header className="lg:grid lg:grid-cols-2 mx-auto max-w-screen-xl lg:my-7 my-5 relative px-4 lg:px-8">
-                        <div className='mx-auto flex flex-col w-full relative z-10 lg:mt-24 sm:text-center lg:pr-12 lg:text-left lg:col-span-1'>
+                        <div className='mx-auto flex flex-col justify-center w-full relative z-10 sm:text-center lg:pr-12 lg:text-left lg:col-span-1'>
                             <h1 className="font-Degular text-gray-900 dark:text-white mb-5 lg:text-left text-center lg:text-5xl text-3xl">AI presentation maker</h1>
                             <p className="text-gray-800 dark:text-white md:text-xl mb-8 md:leading-relaxed leading-relaxed md:text-justify">
                                 If you're feeling uninspired or short on time, it's smart to ask for help. PromptSlide is here to assist you with its new feature—the AI presentation maker! With just a few clicks, you can create amazing slideshows that fit your needs. Best of all, it's completely free!
