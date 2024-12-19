@@ -24,7 +24,7 @@ const CommonFooter: React.FC = () => {
                         <div className='w-full flex flex-col items-center mt-8 sm:items-start sm:order-none sm:mt-4'>
                             <h3 className='w-full uppercase text-base mb-3 px-6 sm:px-0 font-bold text-center sm:text-left'>SOCIAL MEDIA</h3>
 
-                            <div className="flex flex-wrap items-center justify-start mb-2 sm:grid sm:gap-2 sm:grid-cols-3 xl:grid-cols-4">
+                            <div className="flex flex-wrap items-center justify-start mb-2 sm:grid sm:gap-2 sm:grid-cols-4 md:grid-cols-4 xl:grid-cols-4">
 
                                 {/* P Icon */}
                                 <a href="https://www.pinterest.es" target="_blank" rel="noreferrer" className="bg-pinterest rounded flex items-center justify-center p-2 bg-red-700 hover:bg-red-600 mr-2 sm:mr-0 focus:outline-none share">

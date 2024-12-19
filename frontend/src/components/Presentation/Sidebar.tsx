@@ -33,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
         <div className="relative bg-gray-300 md:bg-gray-50 dark:bg-zinc-900 dark:text-white flex lg:h-[669px] select-none">
 
             {/* Sidebar Icons List */}
-            <div className='relative flex items-center justify-between md:gap-2 gap-1 h-18 md:h-full lg:w-20 lg:flex-col lg:justify-start lg:px-0 lg:pt-3 left-3 md:left-0'>
+            <div className='relative flex items-center lg:justify-between md:justify-center md:gap-2 gap-1 h-18 lg:w-20 w-screen lg:flex-col lg:pt-3 px-[12px]'>
 
                 {/* Palette Icon */}
                 <div className="h-14 md:w-auto w-16 flex-1 lg:h-auto lg:flex-none">
@@ -83,12 +83,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
                     </Button>
                 </div>
 
-                <div>
+                <div className='flex flex-1'>
                     {isMobile && (
-                        <div>
+                        <div className='flex flex-1 w-full justify-center items-center'>
                             {/* Grid Icon */}
-                            <div className="h-14 w-16">
-                                <Button variant='ghost' className="group h-full flex-col rounded duration-300" onClick={handleToolsClick}>
+                            <div className="h-14 w-full">
+                                <Button variant='ghost' className="group h-full w-full flex-col rounded duration-300" onClick={handleToolsClick}>
                                     <span className="pro-icon-wrapper">
                                         <span className="pro-icon">
                                             <Grid3x3GapFill size="22px" className="menu-icon bell-icon" />
@@ -99,12 +99,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
                             </div>
 
                             {showTools && (
-                                <div className={`bg-gray-200 dark:bg-zinc-800 flex items-center justify-between h-[400px] w-[360px] absolute bottom-18 -left-3 right-0 z-20 rounded-t-2xl`}>
-                                    <div className="h-full w-full">
+                                <div className={`bg-gray-200 dark:bg-zinc-800 flex items-center justify-between h-[400px] w-screen left-[1px] absolute bottom-18  right-0 z-20 rounded-t-2xl`}>
+                                    <div className="h-full w-screen">
                                         {/* Close Button */}
                                         <div className="flex items-center justify-end h-12 px-4 w-full">
                                             <span className="flex mr-auto text-xl font-semibold">Tools</span>
-                                            <FontAwesomeIcon icon={faX} fontSize={"20px"} onClick={handleToolsClick} />
+                                            <FontAwesomeIcon icon={faX} fontSize={"20px"} className='cursor-pointer' onClick={handleToolsClick} />
                                         </div>
                                         <div className="flex absolute top-14 h-[351.8px] w-full px-3">
                                             {/* Transition Icon */}
@@ -137,8 +137,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
                         </div>
                     )}
                     {!isMobile && (
-                        <div>
-                            <div className="h-14 md:w-auto w-18 flex-1 lg:h-auto lg:flex-none">
+                        <div className='flex items-center lg:flex-col md:flex-row'>
+                            {/* Transition Icon */}
+                            <div className="h-14 lg:w-auto md:w-24 w-18 flex-1 lg:h-auto lg:flex-none lg:mb-2 ">
                                 <Button variant='ghost' className="group relative mx-auto flex h-full w-full flex-col items-center justify-center rounded duration-300 sm:px-6 lg:mx-0 lg:h-18 lg:w-18 lg:px-0">
                                     <span className="pro-icon-wrapper">
                                         <span className="pro-icon">
@@ -150,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
                             </div>
 
                             {/* Animation Icon */}
-                            <div className="h-14 md:w-auto w-18 flex-1 lg:h-auto lg:flex-none">
+                            <div className="h-14 lg:w-auto md:w-24 w-18 flex-1 lg:h-auto lg:flex-none lg:ml-0 ml-2">
                                 <Button variant='ghost' className="group relative mx-auto flex h-full w-full flex-col items-center justify-center rounded duration-300 sm:px-6 lg:mx-0 lg:h-18 lg:w-18 lg:px-0">
                                     <span className="pro-icon-wrapper">
                                         <span className="pro-icon">
@@ -167,7 +168,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarExpanded, setIsSidebarExpand
             </div>
 
             {/* Sidebar Panel */}
-            <div className={`hidden md:block h-full transition-all duration-500 ${isSidebarExpanded ? 'w-80 p-4 border-l border-black dark:border-slate-800' : 'w-0 p-0 pl-1 border-none'}`}>
+            <div className={`hidden lg:block h-full transition-all duration-500 ${isSidebarExpanded ? 'w-80 p-4 border-l border-black dark:border-slate-800' : 'w-0 p-0 pl-1 border-none'}`}>
                 {/* Sidebar Close Button */}
                 <Button className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 p-1 rounded-r-full transition-all duration-0 bg-gray-50 hover:bg-gray-50 text-black dark:bg-zinc-900 dark:hover:bg-zinc-900 h-20 z-10 dark:text-white"
                     onClick={() => setIsSidebarExpanded((prevState) => !prevState)}>

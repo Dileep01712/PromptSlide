@@ -21,11 +21,13 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
     toggleBarIcon
 }) => {
     const { handleButtonClick } = useNavigation();
-    const [isLargeScreen] = useState(window.innerWidth >= 1024);
+    const [isLargeScreen, setIsLargeScree] = useState(window.innerWidth);
     const dropdownRef = useRef<HTMLDivElement>(null); // Ref for the dropdown  
     const [showButtons, setShowButtons] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const isScrolledRef = useRef(false);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [isIconVisible, setIsIconVisible] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -75,8 +77,47 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
         setIsOpen(false);
     };
 
+    useEffect(() => {
+        // Function to update the width state
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        }
+
+        // Add event listener
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        // Function to update the width state
+        const handleResize = () => {
+            // Get the current window width
+            const windowWidth = window.innerWidth;
+            setIsLargeScree(window.innerWidth);
+
+            // Update the icon visibility based on window width
+            setIsIconVisible(windowWidth >= 540);
+        };
+
+        // Initial check on component mount  
+        handleResize();
+
+        // Add event listener
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
     return (
-        <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""}`}>
+        <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-6 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""} `}> 
+        {/* No use of isLargeScreen here */}
             <div className="flex items-center select-none" onClick={() => handleButtonClick('/')}>
                 <div className='flex justify-center items-center cursor-pointer w-10 lg:w-fit'>
                     <img src="./assets/Navbar/logo.webp" alt="Logo" className="lg:h-10 rounded-3xl border border-black" />
@@ -87,8 +128,8 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                     </span>
                 </div>
             </div>
-            <div className="w-fit md:flex ml-auto">
-                {isLargeScreen ? (
+            <div className="w-fit flex ml-auto">
+                {isIconVisible ? (
                     <>
                         <div className="hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer" onClick={toggleIcon}>
                             {isDarkMode ? (
@@ -115,8 +156,8 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                                 )}
                             </div>
                             {showButtons && (
-                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-2xl p-6 border border-gray-300 dark:border-gray-700 w-min transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
-                                    <div className="flex w-64">
+                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-2xl p-6 border border-gray-300 dark:border-gray-700 transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
+                                    <div className="flex min-w-[238px]" style={{ width: `${screenWidth - 106}px` }}>
                                         <div className='mx-auto' onClick={() => { toggleIcon(); handleCloseDropdown() }}>
                                             {isDarkMode ? (
                                                 <Button>

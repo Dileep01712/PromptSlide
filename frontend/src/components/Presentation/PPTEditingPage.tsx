@@ -77,12 +77,12 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
         }
     };
 
-    
+
     const handleSlideCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSlideCount(Number(event.target.value));
     };
     handleSlideCountChange;
-    
+
     const handleClickOutside = useCallback((event: MouseEvent) => {
         if (
             dropdownRef.current &&
@@ -132,7 +132,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
     }, [activeImageIndex]);
 
     return (
-        <div className="flex lg:h-full w-full flex-col-reverse lg:flex-1 lg:flex-row overflow-hidden" style={{ height: 'var(--content-height)' }}>
+        <div className="flex lg:h-full w-full flex-col-reverse lg:flex-1 lg:flex-row overflow-hidden" style={{ height: 'var(--content-height)'}}> {/* For Small Screen */}
             <Sidebar isSidebarExpanded={isSidebarExpanded} setIsSidebarExpanded={setIsSidebarExpanded} />
 
             {/* Main Content */}
@@ -141,11 +141,14 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                 {/* Large Screen: PPT Main Content */}
                 <div className="relative flex flex-col">
 
-                    <div className={`relative md:m-5 m-4 select-none overflow-auto scrollbar ${isPPTEditingExpanded ? 'md:min-h-[435px] md:max-h-[435px]' : 'md:min-h-[561px] md:max-h-[561px]'}`}>
+                    <div className={`relative md:m-5 m-4 select-none overflow-auto scrollbar ${isPPTEditingExpanded ? 'md:min-h-[574px] md:max-h-[574px]' : 'md:min-h-[574px] md:max-h-[574px]'}`}>
 
-                        <div className={`lg:p-7 md:min-h-[451px] min-h-[360px] flex flex-col items-center justify-center overflow-auto ${isPPTEditingExpanded ? 'lg:p-5' : ''}`}>
+                        <div className={`lg:p-7 md:min-h-[500px] min-h-[360px] flex flex-col items-center justify-center overflow-auto ${isPPTEditingExpanded ? 'lg:p-5' : ''}`}>
                             {/* Centered buttons */}
-                            <div className="relative flex items-center justify-center gap-3 px-3 pt-2 pb-1" style={{ width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : 0))}%`, minWidth: '20%' }}>
+                            <div className="relative flex items-center justify-center mx-auto gap-3 px-3 pt-2 pb-1" style={{
+                                width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : window.innerWidth < 900
+                                    ? 20 : 0))}%`, minWidth: '20%'
+                            }}>
                                 <div className="flex content-center items-center gap-4">
                                     <p>Page 1</p>
                                 </div>
@@ -164,9 +167,9 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                             </div>
 
                             {/* Centered image that allows overflow */}
-                            <div className="relative flex justify-center items-center mx-auto overflow-visible border-2 rounded-md"
+                            <div className="relative flex items-center justify-center mx-auto overflow-visible border-2 rounded-md"
                                 style={{
-                                    width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : 0))}%`, // Clamp the width between 20% and 500%
+                                    width: `${Math.max(20, Math.min(rangeValue, 500) + (window.innerWidth < 768 ? 38 : window.innerWidth < 900 ? 20 : 0))}%`, // Clamp the width between 20% and 500%
                                     height: `${Math.max(20, Math.min(rangeValue, 500))}%`, // Clamp the height between 20% and 500%
                                     minWidth: '20%', // Ensure the minimum size is 20%
                                     maxWidth: '500%', // Ensure the maximum size is 500%
@@ -181,7 +184,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
 
 
                 {/* Bottom PPT Panel */}
-                <div className={`flex absolute bottom-0 md:right-0 md:left-0 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 md:h-auto md:w-auto h-auto w-[360px] rounded-t-2xl ${previewVisible ? "bg-gray-300 dark:bg-zinc-900" : "bg-transparent"}`} ref={dropdownRef}>
+                <div className={`flex absolute bottom-0 md:right-0 md:left-0 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 md:h-auto md:w-auto h-auto w-full rounded-t-2xl ${previewVisible ? "bg-gray-300 dark:bg-zinc-900" : "bg-transparent"}`} ref={dropdownRef}>
 
                     {/* For Small Screens */}
                     {isMobile ? (
@@ -259,7 +262,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                     ) : (
                         <>
                             {/* Bottom PPT Panel */}
-                            <div className="hidden md:flex absolute bottom-0 md:right-0 md:left-0 z-10 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 bg-gray-50 dark:bg-zinc-900 md:h-auto md:w-auto h-auto w-[360px]">
+                            <div className=" lg:flex absolute bottom-0 md:right-0 md:left-0 z-10 flex-col justify-between md:px-3 px-2 md:pt-3 pt-2 bg-gray-50 dark:bg-zinc-900 md:h-auto md:w-auto h-auto w-full">
 
                                 {/* Bottom PPT Preview  */}
                                 <div className={`transition-all duration-500 ${isPPTEditingExpanded ? 'h-32' : 'h-0'}`}>
@@ -280,7 +283,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                     </div>
 
                                     {/* Large Screen: PPT Preview */}
-                                        <div className={`${isPPTEditingExpanded ? 'duration-500 visible' : 'opacity-0 duration-500 invisible'}`}>
+                                    <div className={`${isPPTEditingExpanded ? 'duration-500 visible' : 'opacity-0 duration-500 invisible'}`}>
                                         <div className={`flex flex-col w-full rounded:flex-auto lg:rounded-none ${isPPTEditingExpanded ? '' : 'h-0'}`}>
 
                                             <div className="flex items-center select-none">
@@ -319,7 +322,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                 </div>
 
                                 {/* Bottom Control Button */}
-                                <div className="flex flex-row items-center justify-between h-10 z-20 gap-2 w-full my-2">
+                                <div className="hidden lg:flex flex-row items-center justify-between h-10 z-20 gap-2 w-full my-2">
 
                                     {/* Open/Close Button */}
                                     <div className="flex">
@@ -331,7 +334,7 @@ const PPTEditingPage: React.FC<PPTEditingPageProps> = ({
                                     </div>
 
                                     {/* Size Control Bar */}
-                                    <div className="hidden md:flex items-center rounded px-4 mr-3 text-sm h-10 w-56">
+                                    <div className="hidden lg:flex items-center rounded px-4 mr-3 text-sm h-10 w-56">
                                         {/* Input range container */}
                                         <div className="flex items-center">
                                             {/* Input Range */}

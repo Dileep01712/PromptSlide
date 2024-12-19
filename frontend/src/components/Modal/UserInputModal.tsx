@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from '../ui/button';
 import Themes from '../Themes/Themes';
 import handleSwitch from '../Themes/handleSwitch';
@@ -20,6 +20,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { handleButtonClick } = useNavigation();
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
     // Number of Slides: Warning
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,11 +103,26 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         }
     };
 
+    useEffect(() => {
+        // Function to handle screen resize
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <>
             {isOpen && (
                 <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/50 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-9/12 md:mt-32 mt-52">
+                    <div className="lg:w-1/2 md:w-fit md:mt-56 mt-52">
                         {/* Modal content */}
                         <div className="relative py-8 px-6 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
 
@@ -238,7 +254,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 {/* Modal Themes Buttons */}
                                 <div>
                                     <h2 className='text-lg text-black dark:text-white font-semibold mb-2'>Style</h2>
-                                    <div className="justify-between md:mb-4">
+                                    <div className={`justify-between ${window.innerWidth > 640 ? 'mb-4' : 'mb-0'}`}>
 
                                         {/* Dropdown for small devices */}
                                         <div className="sm:hidden mb-3 dark:text-black">
@@ -252,23 +268,23 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </div>
 
                                         {/* Buttons for larger screens */}
-                                        <div className="hidden sm:inline-flex w-full justify-between">
-                                            <Button type="button" className={`h-8 ${activeDiv === 1 ? 'border-2 border-purple-500 ' : 'border-2'}`} variant="outline" onClick={(e) => {
+                                        <div className={`hidden sm:inline-flex w-full justify-between ${screenWidth > 640 && screenWidth < 700 ? 'flex-wrap justify-start gap-4' : ''}`}>
+                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 1 ? 'border-2 border-purple-500 ' : 'border-2'}`} variant="outline" onClick={(e) => {
                                                 e.preventDefault(); handleSwitch(setActiveDiv, 1);
                                             }} >
                                                 Essential Aesthetics
                                             </Button>
-                                            <Button type="button" className={`h-8 ${activeDiv === 2 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
+                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 2 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
                                                 e.preventDefault(); handleSwitch(setActiveDiv, 2);
                                             }} >
                                                 Dynamic Colors
                                             </Button>
-                                            <Button type="button" className={`h-8 ${activeDiv === 3 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
+                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 3 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
                                                 e.preventDefault(); handleSwitch(setActiveDiv, 3);
                                             }} >
                                                 Structured Shapes
                                             </Button>
-                                            <Button type="button" className={`h-8 ${activeDiv === 4 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
+                                            <Button type="button" className={`h-8 ${activeDiv === 4 ? 'border-2 border-purple-500' : 'border-2'} ${screenWidth > 640 && screenWidth < 700 ? 'mt-4' : ''}`} variant="outline" onClick={(e) => {
                                                 e.preventDefault(); handleSwitch(setActiveDiv, 4);
                                             }} >
                                                 Polished Presentation

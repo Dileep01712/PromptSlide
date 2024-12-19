@@ -78,7 +78,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
     }
     return (
         <>
-            <div className="flex items-center justify-center lg:p-2.5 px-3.5 py-2.5 lg:pl-14 border-b sticky top-0 dark:bg-zinc-950 z-20">
+            <div className="flex items-center justify-center lg:p-2.5 px-3.5 py-2.5 lg:pl-6 border-b sticky top-0 dark:bg-zinc-950 z-20">
 
                 {/* Navbar Logo */}
                 <div className="flex items-center select-none w-fit mr-auto" onClick={() => handleButtonClick('/')}>
@@ -93,7 +93,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                 </div>
 
                 {/* Backup & Undo/Redo  Icons */}
-                <div className="hidden md:flex items-center justify-center w-fit mx-auto">
+                <div className="hidden lg:flex items-center justify-center w-fit mx-auto">
 
                     <CommonTooltip text='Undo' positiveY={46}>
                         <div className='hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer'>
@@ -126,7 +126,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                 </div>
 
                 {/* Center */}
-                <div className="flex items-center justify-center w-96 h-9 mx-auto">
+                <div className={`flex items-center justify-center w-96 h-9 mx-auto ${window.innerWidth < 1530 ? 'hidden' : 'flex'}`}>
                     <div className='hidden lg:block'>
                         <input type="text" className="md:h-8 h-8 hover:border hover:border-gray-300 outline-none rounded w-full text-ellipsis bg-transparent px-3 font-Degular text-lg" placeholder='Updated Button Component with Improvements' />
                     </div>
@@ -140,7 +140,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                         <div className='flex items-center justify-center w-full'>
 
                             {/* Present & Download Buttons */}
-                            <div>
+                            <div className={`${window.innerWidth < 1024 ? 'hidden' : 'visible'}`}>
                                 <Button variant='outline' className="font-Degular text-md mx-2 h-9">
                                     <FontAwesomeIcon icon={faDesktop} className='mr-3' />
                                     Present
@@ -185,9 +185,9 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                         <div className="relative" ref={dropdownRef}>
                             <div onClick={handleToggleBarButtons}>
                                 {isOpen ? (
-                                    <FontAwesomeIcon icon={faX} fontSize={"20px"} onClick={toggleBarIcon} />
+                                    <FontAwesomeIcon icon={faX} fontSize={"20px"} className='cursor-pointer' onClick={toggleBarIcon} />
                                 ) : (
-                                    <FontAwesomeIcon icon={faBars} fontSize={"20px"} onClick={toggleBarIcon} />
+                                    <FontAwesomeIcon icon={faBars} fontSize={"20px"} className='cursor-pointer' onClick={toggleBarIcon} />
                                 )}
                             </div>
                             {showButtons && (
@@ -217,11 +217,11 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
 
 
 
-            {/* Undo/Redu and Present/Download Icons */}
-            <div className='flex md:hidden bg-gray-300 dark:bg-zinc-900 h-14 items-center justify-center'>
+            {/* Small Screen: Undo/Redu and Present/Download Icons */}
+            <div className='flex lg:hidden bg-gray-300 dark:bg-zinc-900 h-14 items-center justify-center border-b'>
                 {/* Undo/Redo Icons */}
-                <div className="flex items-center justify-center w-fit mr-2">
-                    <div className='hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer'>
+                <div className="flex items-center mr-2">
+                    <div className='hover:bg-gray-100 dark:hover:bg-zinc-600 rounded p-1 cursor-pointer md:mx-5'>
                         <Icon path={mdiArrowLeftTop} size="27px" />
                     </div>
 
@@ -230,7 +230,7 @@ const PPTEditingPageNavbar: React.FC<PPTEditingPageNavbarProps> = ({
                     </div>
                 </div>
                 {/* Present & Download Icons */}
-                <div>
+                <div className='flex'>
                     <Button variant='outline' className="font-Degular text-md mr-2 h-9">
                         <FontAwesomeIcon icon={faDesktop} className='mr-3' />
                         Present

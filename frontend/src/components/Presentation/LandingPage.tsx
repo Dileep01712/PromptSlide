@@ -25,7 +25,7 @@ const LandingPage: React.FC = () => {
                             <p className="text-gray-800 dark:text-white md:text-xl mb-8 md:leading-relaxed leading-relaxed md:text-justify">
                                 If you're feeling uninspired or short on time, it's smart to ask for help. PromptSlide is here to assist you with its new feature—the AI presentation maker! With just a few clicks, you can create amazing slideshows that fit your needs. Best of all, it's completely free!
                             </p>
-                            <div className='flex flex-col items-center gap-2 mx-auto md:mx-0 sm:flex-row group w-52 font-Degular my-3'>
+                            <div className='flex flex-col items-center justify-center mx-auto lg:mx-0 sm:flex-row group w-fit font-Degular my-3 md:mb-8 rounded-full'>
                                 <Button className="h-14 px-8 rounded-full text-white dark:text-black text-xl font-semibold flex items-center gap-4" onClick={() => handleButtonClick('/create-presentation')}>
                                     Get Started
                                     <FontAwesomeIcon icon={faArrowRight} className="transition-transform transform group-hover:translate-x-1" />
@@ -65,7 +65,9 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
                                 <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
-                                    <img src="./assets/Landing/features3.webp" alt="Logo" className="h-56 object-fill w-full" />
+                                    <img src="./assets/Landing/features3.webp" alt="Logo" className="lg:h-56 md:h-96" style={{
+                                        height: window.innerWidth < 440 ? "11rem" : window.innerWidth >= 440 && window.innerWidth < 768
+                                            ? "319px" : ""}} />
                                 </div>
                                 <div className='pt-6'>
                                     <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Easy Editing Tools</h3>
