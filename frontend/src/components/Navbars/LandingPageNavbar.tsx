@@ -95,6 +95,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
     useEffect(() => {
         // Function to update the width state
         const handleResize = () => {
+            console.log(isLargeScreen)
             // Get the current window width
             const windowWidth = window.innerWidth;
             setIsLargeScree(window.innerWidth);
@@ -113,7 +114,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);
+    }, [isLargeScreen]);
 
     return (
         <div className={`lg:p-2.5 px-3.5 py-2.5 lg:pl-6 border-b flex items-center sticky top-0 z-50 dark:bg-zinc-950/60 transition-shadow bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? "shadow-xl" : ""} `}> 
