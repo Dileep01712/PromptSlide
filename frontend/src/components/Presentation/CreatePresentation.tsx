@@ -114,8 +114,7 @@ const CreatePresentation: React.FC = () => {
                             <>
                                 <h3 className='flex flex-col sm:flex-row justify-center items-center text-white py-2 md:py-0'>
                                     <span className='text-center md:mr-4 text-xl text-white'>Transform your next idea into reality with</span>
-                                    <Button type="button" onClick={handleToggleModal} className="relative overflow-hidden rounded h-10 px-4 mt-4 md:mt-0 text-base font-semibold hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500" onMouseEnter={handleMouseEnter}
-                                        onMouseLeave={() => setIsHovered(false)}>
+                                    <Button type="button" onClick={handleToggleModal} className="relative overflow-hidden rounded h-10 px-4 mt-4 md:mt-0 text-base font-semibold hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 select-none" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)}>
 
                                         {/* Button Content */}
                                         <span className={`relative flex items-center z-10`}>

@@ -13,27 +13,37 @@ interface UserInputModalProps {
 }
 
 const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv, isOpen, closeModal }) => {
-    const [slideCount, setSlideCount] = useState(7);
     const [warningA, setWarningA] = useState('');
     const [warningB, setWarningB] = useState('');
+    const [warningC, setWarningC] = useState('');
     const [isHovered, setIsHovered] = useState(false);
-    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [file, setFile] = useState<File[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const { handleButtonClick } = useNavigation();
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [formData, setFormData] = useState<{ title: string; tone: string; language: string; numberOfSlides: number | null; style: string; }>({ title: "", tone: "Professional", language: "English", numberOfSlides: 7, style: "Default", });
 
-    // Number of Slides: Warning
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10); // Ensure the value is treated as a number
+        const inputValue = event.target.value; // Get raw input value
 
-        // Set the slide count to the user's input
-        setSlideCount(value);
+        if (inputValue === "" || isNaN(Number(inputValue))) {
+            // If the input is empty or not a number, set a warning and don't update the slide count
+            setWarningB("The number of slides is required.");
+            setFormData((prev) => ({ ...prev, numberOfSlides: null }));
+            return;
+        }
 
-        // Display a warning if the value is outside the range
-        if (value < 6 || value > 15) {
-            setWarningA('The number should be between 6 and 15.');
+        // Update the number of slides even if it's out of range
+        setFormData((prev) => ({ ...prev, numberOfSlides: numericValue }));
+        const numericValue = parseInt(inputValue, 10); // Convert to number
+
+        if (numericValue < 6 || numericValue > 15) {
+            // Display a warning if the value is outside the range
+            setWarningB("The number should be between 6 and 15.");
         } else {
-            setWarningA('');
+            // Clear the warning and update the value
+            setWarningB("");
+            setFormData((prev) => ({ ...prev, numberOfSlides: numericValue }));
         }
     };
 
@@ -53,21 +63,33 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
             const fileArray = Array.from(files);
 
             // Check if total files exceed 2
-            if (fileArray.length + uploadedFiles.length > 2) {
-                setWarningB("You can only upload up to 2 files.");
+            if (fileArray.length + file.length > 1) {
+                setWarningC("You can only upload up to 1 file.");
                 setTimeout(() => {
-                    setWarningB('');
+                    setWarningC('');
                 }, 8000);
                 return;
             }
 
+            // Filter valid files based on size (max 20MB)
             const filteredFiles = fileArray.filter((file) => {
+                const validFileTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+
+                // Check file type
+                if (!validFileTypes.includes(file.type)) {
+                    setWarningC("Only .pdf and .docx files are allowed.");
+                    setTimeout(() => {
+                        setWarningC('');
+                    }, 8000);
+                    return false;
+                }
+
                 // Check if file size exceeds 20MB
                 const fileSizeMB = file.size / (1024 * 1024);
-                if (fileSizeMB > 20) {
-                    setWarningB("File is larger than 20MB can't be uploaded.");
+                if (fileSizeMB > 10) {
+                    setWarningC("The selected file is too large. Please upload a file smaller than 10MB.");
                     setTimeout(() => {
-                        setWarningB('');
+                        setWarningC('');
                     }, 8000);
                     return false;
                 }
@@ -88,16 +110,27 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 return new File([file], truncatedName, { type: file.type });
             });
 
-            setUploadedFiles([...uploadedFiles, ...processedFiles]);
+            // Only add new valid files to state, avoiding duplicates
+            setFile((prevFiles) => {
+                const newFiles = [...prevFiles, ...processedFiles].slice(0, 1);
+                return newFiles;
+            });
         }
     };
 
-    const handleRemoveFile = (index: number) => {
-        const updatedFiles = uploadedFiles.filter((_, i) => i !== index);
-        setUploadedFiles(updatedFiles);
+    const handleRemoveFile = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
+        event.preventDefault();
+        const updatedFiles = file.filter((_, i) => i !== index);
+        setFile(updatedFiles);
+
+        // Reset the file input after removing a file
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";  // Clear the input's file history
+        }
     };
 
-    const handleFileButtonClick = () => {
+    const handleFileButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
@@ -118,43 +151,122 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         };
     }, []);
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        // Check if the title is empty  
+        if (!formData.title.trim()) {
+            setWarningA("Title cannot be empty!");
+            setTimeout(() => {
+                setWarningA('');
+            }, 8000);
+            return;
+        }
+
+        // Regular expression to detect URLs
+        const urlPattern = /(https?:\/\/[^\s]+)/g;
+
+        // Check if the title contains a link
+        if (urlPattern.test(formData.title)) {
+            setWarningA("Links are not allowed in the title!");
+            setTimeout(() => {
+                setWarningA('');
+            }, 8000);
+            return;
+        }
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title || '');
+        formDataToSend.append('tone', formData.tone || 'Professional');
+        formDataToSend.append('language', formData.language || 'English');
+        formDataToSend.append('num_slides', formData.numberOfSlides !== null ? formData.numberOfSlides.toString() : '7');
+        formDataToSend.append('style', formData.style || 'Default');
+
+        if (file.length > 0) {
+            // Only append up to 2 files
+            for (let i = 0; i < file.length; i++) {
+                formDataToSend.append('file', file[i]); // Append files correctly
+            }
+        }
+
+        // console.log("Form Data Sent to Backend:", formData);
+
+        // for (const pair of formDataToSend.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/user/generate_presentation', {
+                method: 'POST',
+                body: formDataToSend,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit form');
+            }
+
+            await response.json();
+            // console.log('Success:', result)
+
+            // Clear form fields after submission
+            setFormData({
+                title: '',
+                tone: 'Professional',
+                language: 'English',
+                numberOfSlides: 7,
+                style: 'Default',
+            });
+
+            // Clear file input
+            setFile([]);
+
+            // Reset the file input element value to allow re-upload of the same file
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+
+        } catch (error) {
+            console.log('Error:', error)
+        }
+    }
+
     return (
         <>
             {isOpen && (
                 <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/50 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-fit md:mt-56 mt-52">
+                    <div className="lg:w-1/2 md:w-fit mt-32">
                         {/* Modal content */}
-                        <div className="relative py-8 px-6 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
+                        <div className="p-5 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
 
                             {/* Modal header */}
                             <div className="flex items-center justify-between mb-4">
                                 <h1 className="md:text-3xl text-2xl text-black dark:text-white font-Degular">Create your presentation</h1>
-                                <Button type="button" className="absolute top-2 right-2 p-2 bg-transparent hover:bg-gray-200 text-black dark:text-white rounded text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600" onClick={closeModal}>
+                                <Button type="button" className="relative -right-2 p-2 bg-transparent hover:bg-gray-200 text-black dark:text-white rounded text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600" onClick={closeModal}>
                                     <svg className="h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                     </svg>
-                                    <span className="sr-only">Close modal</span>
                                 </Button>
                             </div>
 
-                            <form method='post' action="" className="font-Lato" onSubmit={(e) => { e.preventDefault(); }}>
+                            <form method='post' className="font-Lato" onSubmit={handleSubmit}>
                                 {/* Modal Input Prompt */}
-                                <div>
+                                <div className="md:h-24 pb-2">
                                     <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Topic</h3>
-                                    <input type="text" className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full mb-3 text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
+                                    <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
+                                    {/* Warning Message */}
+                                    {warningA && (
+                                        <p className={`text-red-500 text-xs absolute ${warningA ? 'visible' : 'invisible'}`}>{warningA}</p>
+                                    )}
                                 </div>
 
-                                {/* Modal Language Dropdown List */}
-                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-7 flex-wrap">
+                                {/* Modal Dropdown List */}
+                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-3 flex-wrap">
                                     {/* Writing Tone */}
                                     <div>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Writing tone</h3>
-                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm">
-                                            <option>Unspecified</option>
-                                            <option value="Fun">Fun</option>
-                                            <option value="Creative">Creative</option>
-                                            <option value="Casual">Casual</option>
+                                        <select value={formData.tone} onChange={(e) => setFormData({ ...formData, tone: e.target.value })} className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm">
                                             <option value="Professional">Professional</option>
+                                            <option value="Casual">Casual</option>
+                                            <option value="Creative">Creative</option>
                                             <option value="Formal">Formal</option>
                                         </select>
                                     </div>
@@ -162,56 +274,36 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                     {/* Language */}
                                     <div className='flex-1'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Language</h3>
-                                        <select className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm">
-                                            <option>Auto</option>
-                                            <option value="en">English</option>
-                                            <option value="hi">हिन्दी</option>
-                                            <option value="mr">मराठी</option>
-                                            <option value="gu">ગુજરાતી</option>
-                                            <option value="pa">ਪੰਜਾਬੀ</option>
-                                            <option value="ur">اردو</option>
-                                            <option value="bn">বাংলা</option>
-                                            <option value="te">తెలుగు</option>
-                                            <option value="ta">தமிழ்</option>
-                                            <option value="zh">中文</option>
-                                            <option value="es">Español</option>
-                                            <option value="pt">Português</option>
-                                            <option value="de">Deutsch</option>
-                                            <option value="it">Italiano</option>
-                                            <option value="fr">Français</option>
-                                            <option value="ru">Русский</option>
-                                            <option value="ja">日本語</option>
-                                            <option value="tr">Türkçe</option>
-                                            <option value="ko">한국어</option>
-                                            <option value="vi">Tiếng Việt</option>
-                                            <option value="yo">Yorùbá</option>
-                                            <option value="jv">Basa Jawa</option>
-                                            <option value="pl">Polski</option>
-                                            <option value="uk">Українська</option>
-                                            <option value="ms">Bahasa Melayu</option>
+                                        <select value={formData.language} onChange={(e) => setFormData({ ...formData, language: e.target.value })} className="pl-4 bg-white pr-12 rounded border border-gray-300 w-full placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm">
+                                            <option value="english">English</option>
+                                            <option value="spanish">Spanish</option>
+                                            <option value="french">French</option>
+                                            <option value="german">German</option>
+                                            <option value="italian">Italian</option>
+                                            <option value="dutch">Dutch</option>
+                                            <option value="russian">Russian</option>
+                                            <option value="portuguese">Portuguese</option>
                                         </select>
                                     </div>
 
                                     {/* Number of Slides */}
                                     <div className='flex-1 lg:flex-0'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
-                                        <input type="number" required autoComplete="off" value={slideCount} onChange={handleInputChange} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none focus:border-gray-900 md:h-9 h-8 text-gray-900 text-sm" />
+                                        <input type="number" required value={formData.numberOfSlides !== null ? formData.numberOfSlides : ""} onChange={handleInputChange} min={6} max={15} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
-                                        {warningA && (
-                                            <p className={`text-red-600 text-xs mt-2 absolute ${warningA ? 'visible' : 'invisible'}`}>{warningA}</p>
+                                        {warningB && (
+                                            <p className={`text-red-500 text-xs absolute ${warningB ? 'visible' : 'invisible'}`}>{warningB}</p>
                                         )}
                                     </div>
-
                                 </div>
 
                                 {/* Modal Upload Files */}
-                                <div className="mb-8 md:h-24 md:pb-0 h-fit">
+                                <div className="md:mb-8 md:h-16 md:pb-0 h-fit">
                                     <div className="flex justify-between">
                                         <div className="flex">
-                                            <h3 className="md:text-lg text-base mb-1 mr-1 text-black dark:text-white font-semibold">
-                                                Upload files <span className="text-sm text-gray-600 dark:text-gray-300 font-Degular">(optional)</span>
+                                            <h3 className="md:text-lg text-base mr-1 text-black dark:text-white font-semibold">Upload files <span className="text-sm text-gray-600 dark:text-gray-300 font-Degular">(optional)</span>
                                             </h3>
-                                            <ModalTooltip text="Share more details about this topic by uploading a PDF/Word, Max 2 files">
+                                            <ModalTooltip text="You can upload a PDF or Word document for more details (maximum 1 file)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} className="h-5 w-5 cursor-pointer">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                                                 </svg>
@@ -219,74 +311,59 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row md:mt-2 mt-1">
-                                        {/* Hidden file input */}
-                                        <input type="file" accept=".pdf, .doc, .docx" multiple onChange={handleFileChange} ref={fileInputRef} className="hidden" />
+                                    <div className="grid flex-col mt-2">
+                                        <div className="grid md:grid-flow-col justify-start">
+                                            {/* Hidden file input */}
+                                            <input type="file" accept=".pdf, .docx" multiple onChange={handleFileChange} ref={fileInputRef} className="hidden" />
 
-                                        {/* Button to trigger file input */}
-                                        <Button onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border h-9 text-sm w-fit sm:mr-2 sm:mb-0">
-                                            Upload File
-                                        </Button>
+                                            {/* Button to trigger file input */}
+                                            <Button type="button" onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border-2 h-9 text-sm w-fit sm:mr-2 sm:mb-0 select-none hover:border-gray-300">
+                                                Upload File
+                                            </Button>
 
-                                        {/* List of uploaded files */}
-                                        <div className="flex flex-wrap md:justify-center w-full md:mt-0">
-                                            {uploadedFiles.length > 0 && (
-                                                <ul className="flex flex-wrap gap-3 mt-2 h-fit">
-                                                    {uploadedFiles.map((file, index) => (
-                                                        <li key={index} className="flex items-center justify-between bg-gray-200 dark:bg-gray-950 p-1 rounded h-9 w-full sm:w-auto">
-                                                            <span className="text-sm">{file.name}</span>
-                                                            <Button variant='outline' className="ml-2 rounded-full w-5 h-5 flex items-center justify-center p-2.5" onClick={() => handleRemoveFile(index)}>
-                                                                &#10005; {/* X Button */}
-                                                            </Button>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                            {/* List of uploaded files */}
+                                            <div className={`flex flex-wrap md:ml-1 w-full md:mt-0 ${file.length > 0 ? "h-14" : "h-1"}`}>
+                                                {file.length > 0 && (
+                                                    <ul className="flex flex-wrap gap-3 md:mt-0 mt-2 h-fit">
+                                                        {file.map((file, index) => (
+                                                            <li key={index} className="flex items-center justify-between bg-gray-200 dark:bg-gray-950 p-1 rounded h-9 w-full sm:w-auto">
+                                                                <span className="text-sm">{file.name}</span>
+                                                                <Button variant='outline' className="ml-2 rounded-full w-5 h-5 flex items-center justify-center p-2.5" onClick={(event) => handleRemoveFile(event, index)}>
+                                                                    &#10005; {/* X Button */}
+                                                                </Button>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="bottom-0 h-fit -mt-3">
+                                            {/* Warning Message */}
+                                            {warningC && (
+                                                <p className={`text-red-500 text-xs ${warningC ? 'visible' : 'invisible'}`}>{warningC}</p>
                                             )}
                                         </div>
                                     </div>
-
-                                    {/* Warning Message */}
-                                    {warningB && (
-                                        <p className={`text-red-600 text-xs md:ml-28 mr-6 mt-2 absolute ${warningB ? 'visible' : 'invisible'}`}>{warningB}</p>
-                                    )}
                                 </div>
 
                                 {/* Modal Themes Buttons */}
                                 <div>
                                     <h2 className='text-lg text-black dark:text-white font-semibold mb-2'>Style</h2>
-                                    <div className={`justify-between ${window.innerWidth > 640 ? 'mb-4' : 'mb-0'}`}>
-
+                                    <div>
                                         {/* Dropdown for small devices */}
-                                        <div className="sm:hidden mb-3 dark:text-black">
-                                            <select className="pl-4 border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} // Keep the selected option in sync with the active div
-                                            >
+                                        <div className="md:hidden mb-3 dark:text-black">
+                                            <select className="bg-white pl-4 border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} > // Keep the selected option in sync with the active div
                                                 <option value={1}>Essential Aesthetics</option>
-                                                <option value={2}>Dynamic Colors</option>
-                                                <option value={3}>Structured Shapes</option>
-                                                <option value={4}>Polished Presentation</option>
+                                                <option value={2}>Polished Presentation</option>
                                             </select>
                                         </div>
 
-                                        {/* Buttons for larger screens */}
-                                        <div className={`hidden sm:inline-flex w-full justify-between ${screenWidth > 640 && screenWidth < 700 ? 'flex-wrap justify-start gap-4' : ''}`}>
-                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 1 ? 'border-2 border-purple-500 ' : 'border-2'}`} variant="outline" onClick={(e) => {
-                                                e.preventDefault(); handleSwitch(setActiveDiv, 1);
-                                            }} >
+                                        {/* Dropdown for larger screens */}
+                                        <div className={`hidden sm:inline-flex w-full md:mb-3 ${screenWidth > 640 && screenWidth < 700 ? 'flex-wrap justify-start gap-4' : ''}`}>
+                                            <Button type="button" className={`h-9 md:mr-3 ${activeDiv === 1 ? 'border-2 border-purple-500 ' : 'hover:border-gray-300 border-2'}`} variant="outline" onClick={(e) => { e.preventDefault(); handleSwitch(setActiveDiv, 1); }} >
                                                 Essential Aesthetics
                                             </Button>
-                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 2 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
-                                                e.preventDefault(); handleSwitch(setActiveDiv, 2);
-                                            }} >
-                                                Dynamic Colors
-                                            </Button>
-                                            <Button type="button" className={`h-8 md:mr-3 ${activeDiv === 3 ? 'border-2 border-purple-500' : 'border-2'}`} variant="outline" onClick={(e) => {
-                                                e.preventDefault(); handleSwitch(setActiveDiv, 3);
-                                            }} >
-                                                Structured Shapes
-                                            </Button>
-                                            <Button type="button" className={`h-8 ${activeDiv === 4 ? 'border-2 border-purple-500' : 'border-2'} ${screenWidth > 640 && screenWidth < 700 ? 'mt-4' : ''}`} variant="outline" onClick={(e) => {
-                                                e.preventDefault(); handleSwitch(setActiveDiv, 4);
-                                            }} >
+                                            <Button type="button" className={`h-9 ${activeDiv === 2 ? 'border-2 border-purple-500' : 'hover:border-gray-300 border-2'} ${screenWidth > 640 && screenWidth < 700 ? 'mt-4' : ''}`} variant="outline" onClick={(e) => { e.preventDefault(); handleSwitch(setActiveDiv, 2); }} >
                                                 Polished Presentation
                                             </Button>
                                         </div>
@@ -300,7 +377,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 </div>
 
                                 {/* Modal Generate Button */}
-                                <Button type='submit' className="flex bg-zinc-950 dark:bg-slate-100 dark:text-black dark:hover:text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('/ppt-editing')}>
+                                <Button type='submit' className="flex bg-zinc-950 dark:bg-slate-100 dark:text-black dark:hover:text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4 select-none" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('')}>
                                     <span className="flex items-center justify-center gap-2 font-Degular text-xl">
                                         <svg className="fill-current h-7 mt-2" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
                                             <path

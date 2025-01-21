@@ -1,6 +1,10 @@
-from pptx import Presentation  # type: ignore
-from pptx.dml.color import RGBColor  # type: ignore
-from pptx.util import Inches, Pt  # type: ignore
+# type: ignore
+import os
+import re
+from pptx.util import Pt
+from pptx import Presentation
+from pptx.dml.color import RGBColor
+from app.services.faiss_vector_db import clear_vector_db
 
 
 # Function to set background color
@@ -24,7 +28,8 @@ def set_text_color_and_size(slide, color, title_size, para_size):
                         run.font.size = Pt(para_size)
 
 
-def create_presentation(filename, data):
+# Function to create presentation
+def create_presentation(data):
     """
     Takes a data whose structure is as follows:
     {
@@ -75,5 +80,13 @@ def create_presentation(filename, data):
         set_background_color(content_slide, (23, 23, 23))  # In RGB
         set_text_color_and_size(content_slide, (236, 236, 236), 36, 24)
 
+    # Sanitize title to create a valid filename
+    sanitized_title = re.sub(r"[<>:\"/\\|?*]", "", title.text or "Untitled").strip()
+    filename = f"app/presentations/{sanitized_title}"
+
+    # Ensure the 'presentations' directory exists
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
     # Save the presentation to a file
     presentation.save(f"{filename}.pptx")
+    clear_vector_db()

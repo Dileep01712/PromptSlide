@@ -95,7 +95,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
     useEffect(() => {
         // Function to update the width state
         const handleResize = () => {
-            console.log(isLargeScreen)
+            // console.log(isLargeScreen)
             // Get the current window width
             const windowWidth = window.innerWidth;
             setIsLargeScree(window.innerWidth);
@@ -141,8 +141,8 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                         </div>
                         <div className="border-l border-black dark:border-white h-9 ml-4"></div>
                         <div>
-                            <Button className="mx-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/login')}>Log In</Button>
-                            <Button className="mr-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/signup')}>Sign Up</Button>
+                            <Button className="mx-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/login')}>Log in</Button>
+                            <Button className="mr-4 font-Degular text-md h-9" onClick={() => handleButtonClick('/signup')}>Sign up</Button>
                         </div>
                     </>
                 ) : (
@@ -157,7 +157,7 @@ const LandingPageNavbar: React.FC<LandingPageNavbarProps> = ({
                                 )}
                             </div>
                             {showButtons && (
-                                <div className="absolute top-12 transform -translate-x-full rounded-lg shadow-2xl p-6 border border-gray-300 dark:border-gray-700 transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
+                                <div className="absolute top-11 left-3.5 transform -translate-x-full rounded-lg shadow-2xl p-9 border border-gray-300 dark:border-gray-700 transition-all duration-500 bg-white dark:bg-zinc-950 h-52 flex items-center justify-center">
                                     <div className="flex min-w-[238px]" style={{ width: `${screenWidth - 106}px` }}>
                                         <div className='mx-auto' onClick={() => { toggleIcon(); handleCloseDropdown() }}>
                                             {isDarkMode ? (

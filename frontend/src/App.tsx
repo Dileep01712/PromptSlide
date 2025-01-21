@@ -56,8 +56,14 @@ const App: React.FC = () => {
     };
   }, []);
 
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  if (!googleClientId) {
+    console.log("Google Client ID is missing in environment variables!");
+    return null
+  }
+
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId={googleClientId}>
       <Router>
         <MainLayout isDarkMode={isDarkMode} toggleIcon={toggleIcon} isOpen={isOpen} toggleBarIcon={toggleBarIcon} setIsOpen={setIsOpen}>
           <Routes>

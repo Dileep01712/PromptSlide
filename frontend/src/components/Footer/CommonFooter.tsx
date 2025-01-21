@@ -69,7 +69,7 @@ const CommonFooter: React.FC = () => {
                         </div>
 
                         <div className='my-6 mx-auto'>
-                            <p className='text-center text-sm'>Copyright © 2024 PromptSlide. All rights reserved.</p>
+                            <p className='text-center text-sm'>© 2025 PromptSlide | All rights reserved</p>
                         </div>
 
                     </div>
