@@ -29,6 +29,7 @@ async def register_user(
         # Connect to the database
         await connect_to_db()
         user = body.user
+        print(f"User data: {user}")
 
         # Check if the email already exists
         existing_user = await prisma.user.find_unique(where={"email": user.email})
@@ -85,6 +86,7 @@ async def register_user_google(
             },
         )
         token_data = token_response.json()
+        print(f"Token data: {token_data}")
 
         if "error" in token_data:
             raise HTTPException(

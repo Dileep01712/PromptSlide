@@ -13,9 +13,9 @@ interface UserInputModalProps {
 }
 
 const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv, isOpen, closeModal }) => {
-    const [warningA, setWarningA] = useState('');
-    const [warningB, setWarningB] = useState('');
-    const [warningC, setWarningC] = useState('');
+    const [titleWarning, setTitleWarning] = useState('');
+    const [slideLimitWarning, setSlideLimitWarning] = useState('');
+    const [fileLimitWarning, setFileLimitWarning] = useState('');
     const [isHovered, setIsHovered] = useState(false);
     const [file, setFile] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +28,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
 
         if (inputValue === "" || isNaN(Number(inputValue))) {
             // If the input is empty or not a number, set a warning and don't update the slide count
-            setWarningB("The number of slides is required.");
+            setSlideLimitWarning("The number of slides is required.");
             setFormData((prev) => ({ ...prev, numberOfSlides: null }));
             return;
         }
@@ -39,10 +39,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
 
         if (numericValue < 6 || numericValue > 15) {
             // Display a warning if the value is outside the range
-            setWarningB("The number should be between 6 and 15.");
+            setSlideLimitWarning("The number should be between 6 and 15.");
         } else {
             // Clear the warning and update the value
-            setWarningB("");
+            setSlideLimitWarning("");
             setFormData((prev) => ({ ...prev, numberOfSlides: numericValue }));
         }
     };
@@ -64,9 +64,9 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
 
             // Check if total files exceed 2
             if (fileArray.length + file.length > 1) {
-                setWarningC("You can only upload up to 1 file.");
+                setFileLimitWarning("You can only upload up to 1 file.");
                 setTimeout(() => {
-                    setWarningC('');
+                    setFileLimitWarning('');
                 }, 8000);
                 return;
             }
@@ -77,9 +77,9 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
 
                 // Check file type
                 if (!validFileTypes.includes(file.type)) {
-                    setWarningC("Only .pdf and .docx files are allowed.");
+                    setFileLimitWarning("Only .pdf and .docx files are allowed.");
                     setTimeout(() => {
-                        setWarningC('');
+                        setFileLimitWarning('');
                     }, 8000);
                     return false;
                 }
@@ -87,9 +87,9 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 // Check if file size exceeds 20MB
                 const fileSizeMB = file.size / (1024 * 1024);
                 if (fileSizeMB > 10) {
-                    setWarningC("The selected file is too large. Please upload a file smaller than 10MB.");
+                    setFileLimitWarning("The selected file is too large. Please upload a file smaller than 10MB.");
                     setTimeout(() => {
-                        setWarningC('');
+                        setFileLimitWarning('');
                     }, 8000);
                     return false;
                 }
@@ -136,6 +136,37 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         }
     };
 
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = event.target.value;
+        const wordCount = inputValue.trim().split(/\s+/).filter(word => word.length > 0).length;
+
+        // Strict URL pattern
+        const urlPattern = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
+
+        let warningMessage = '';
+
+        // Check if the title contains a link
+        if (urlPattern.test(inputValue)) {
+            warningMessage = "Links are not allowed in the title!";
+        }
+        // Check if the title is empty
+        else if (!inputValue.trim()) {
+            warningMessage = "Title cannot be empty!";
+        }
+        // Check for word limit
+        else if (wordCount < 2) {
+            warningMessage = "Title must have at least 2 words.";
+        }
+        else if (wordCount > 15) {
+            warningMessage = "Title cannot exceed 15 words.";
+        }
+
+        setTitleWarning(warningMessage); // Set the final warning message
+
+        // Update the form data  
+        setFormData((prev) => ({ ...prev, title: inputValue }));
+    };
+
     useEffect(() => {
         // Function to handle screen resize
         const handleResize = () => {
@@ -153,26 +184,6 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Check if the title is empty  
-        if (!formData.title.trim()) {
-            setWarningA("Title cannot be empty!");
-            setTimeout(() => {
-                setWarningA('');
-            }, 8000);
-            return;
-        }
-
-        // Regular expression to detect URLs
-        const urlPattern = /(https?:\/\/[^\s]+)/g;
-
-        // Check if the title contains a link
-        if (urlPattern.test(formData.title)) {
-            setWarningA("Links are not allowed in the title!");
-            setTimeout(() => {
-                setWarningA('');
-            }, 8000);
-            return;
-        }
 
         const formDataToSend = new FormData();
         formDataToSend.append('title', formData.title || '');
@@ -251,10 +262,10 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                 {/* Modal Input Prompt */}
                                 <div className="md:h-24 pb-2">
                                     <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Topic</h3>
-                                    <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
+                                    <input type="text" value={formData.title} onChange={(e) => { setFormData({ ...formData, title: e.target.value }); handleTitleChange(e) }} className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
                                     {/* Warning Message */}
-                                    {warningA && (
-                                        <p className={`text-red-500 text-xs absolute ${warningA ? 'visible' : 'invisible'}`}>{warningA}</p>
+                                    {titleWarning && (
+                                        <p className="text-red-500 text-xs absolute">{titleWarning}</p>
                                     )}
                                 </div>
 
@@ -291,8 +302,8 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
                                         <input type="number" required value={formData.numberOfSlides !== null ? formData.numberOfSlides : ""} onChange={handleInputChange} min={6} max={15} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
-                                        {warningB && (
-                                            <p className={`text-red-500 text-xs absolute ${warningB ? 'visible' : 'invisible'}`}>{warningB}</p>
+                                        {slideLimitWarning && (
+                                            <p className="text-red-500 text-xs absolute">{slideLimitWarning}</p>
                                         )}
                                     </div>
                                 </div>
@@ -339,8 +350,8 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </div>
                                         <div className="bottom-0 h-fit -mt-3">
                                             {/* Warning Message */}
-                                            {warningC && (
-                                                <p className={`text-red-500 text-xs ${warningC ? 'visible' : 'invisible'}`}>{warningC}</p>
+                                            {fileLimitWarning && (
+                                                <p className="text-red-500 text-xs">{fileLimitWarning}</p>
                                             )}
                                         </div>
                                     </div>

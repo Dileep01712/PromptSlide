@@ -26,6 +26,9 @@ const RegisterPage: React.FC = () => {
         password: ''
     });
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
     // Handles input changes and clears field-specific errors on user input
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -36,16 +39,22 @@ const RegisterPage: React.FC = () => {
     const signup = useGoogleLogin({
         flow: "auth-code", // 'auth-code' flow for server-side token exchange
         scope: "email profile", // Define the required Google scopes
-        redirect_uri: "http://localhost:5173", // Must match the backend and Google Cloud Console
+        redirect_uri: "https://promptslide.vercel.app/auth/callback", // Must match the backend and Google Cloud Console
         onSuccess: async (response) => {
             try {
+                if (!backendUrl) {
+                    console.log("Backend url is missing in environment variables!");
+                    console.log(backendUrl);
+                    return null
+                }
                 // Extract the authorization code
                 const { code } = response;
+                console.log("Code: ", code)
 
                 // Send the auth code and redirect URI to the backend
-                await axios.post("http://127.0.0.1:8000/api/user/register/google", {
+                await axios.post(`${backendUrl}/api/user/register/google`, {
                     auth_code: code, // Pass the auth code to the backend
-                    redirect_uri: "http://localhost:5173", // Include the redirect URI
+                    redirect_uri: "https://promptslide.vercel.app/auth/callback", // Include the redirect URI
                 });
 
             } catch (error) {
@@ -72,6 +81,8 @@ const RegisterPage: React.FC = () => {
             password: formData.password.trim(),
         };
 
+        console.log("Timmed data: ", trimmedData)
+
         // Validate fields
         const newErrors = {
             firstName: trimmedData.firstName ? "" : "First Name is required",
@@ -92,7 +103,7 @@ const RegisterPage: React.FC = () => {
 
         try {
             // Send data to backend for normal user registration
-            await axios.post('http://127.0.0.1:8000/api/user/register', {
+            await axios.post(`${backendUrl}/api/user/register`, {
                 user: {
                     firstName: trimmedData.firstName,
                     lastName: trimmedData.lastName,

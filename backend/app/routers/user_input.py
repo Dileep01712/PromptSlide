@@ -43,7 +43,7 @@ async def user_data(
             "num_slides": num_slides,
             "style": style,
         }
-        # print(f"Request Data: {request_data}")
+        print(f"\nRequest Data: {request_data}")
 
         if not os.path.exists("app/uploads"):
             os.makedirs("app/uploads")
@@ -66,7 +66,7 @@ async def user_data(
                 cleaned_text = clean_text(extracted_content)
                 text_chunks = chunk_text(cleaned_text)
                 add_to_vector_db(text_chunks)
-                # print(f"Extracted Content: {text_chunks}")
+                print(f"\nExtracted Content: {text_chunks}")
             else:
                 print("No content extracted from the uploaded file.")
 
