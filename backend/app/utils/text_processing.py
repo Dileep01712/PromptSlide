@@ -1,4 +1,3 @@
-# type: ignore
 import os
 import re
 from docx import Document
@@ -30,8 +29,12 @@ def extract_text_from_file(file_path: str) -> str:
         elif file_extension == ".docx":
             # Extract text from Word Document
             doc = Document(file_path)
-            text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-            return text.strip()
+            text = []
+            for para in doc.paragraphs:
+                if para.style and getattr(para.style, "name", None):
+                    text.append("\nHEADING: " + para.text)  # Mark headings for scoring
+                text.append(para.text)
+            return "\n".join(text).strip()
         else:
             raise ValueError(f"Unsupported file type: '{file_extension}'")
 
@@ -118,6 +121,94 @@ def clean_text(text):
     return text
 
 
+def split_sentence(text):
+    """
+    Split text into sentences using regex to handle abbreviations and edge cases.
+
+    Args:
+        text (str): The input text.
+
+    Returns:
+        list: A list of sentences.
+    """
+    sentences = re.split(r"(?<!\b\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s+", text)
+    return [s.strip() for s in sentences if s.strip()]
+
+
+def score_sentence(
+    sentence, position, position_weight=0.5, keyword_weight=1, lenght_weight=0.1
+):
+    """
+    Score a sentence based on heuristics like position, keywords, and length.
+
+    Args:
+        sentence (str): The sentence to score.
+        position_weight (float): Weight for sentence position.
+        keyword_weight (float): Weight for keyword presence.
+        length_weight (float): Weight for sentence length.
+
+    Returns:
+        float: The sentence's score.
+    """
+    keywords = {"important", "key", "summary", "conclusion", "significant"}
+    score = 0
+
+    # Position: Higher score if in first/last 10% of sentences
+    if position_weight:
+        score += position_weight if (position < 0.1 or position > 0.9) else 0
+
+    # Keywords
+    if keyword_weight:
+        score += keyword_weight * sum(
+            1 for word in keywords if word in sentence.lower()
+        )
+
+    # Length
+    if lenght_weight:
+        score += lenght_weight * (len(sentence) // 20)
+
+    # Numbers/Dates
+    if re.search(r"\d+", sentence):
+        score += 1
+
+    return score
+
+
+def remove_redundant(sentences, max_similarity=0.8):
+    """
+    Remove redundant sentences based on similarity.
+
+    Args:
+        sentences (list): List of sentences.
+        max_similarity (float): Threshold for similarity.
+
+    Returns:
+        list: A list of unique sentences.
+    """
+    unique = []
+    for sent in sentences:
+        if not any(is_similar(sent, u, max_similarity) for u in unique):
+            unique.append(sent)
+    return unique
+
+
+def is_similar(a, b, max_similarity):
+    """
+    Check if two sentences are similar based on word overlap.
+
+    Args:
+        a (str): First sentence.
+        b (str): Second sentence.
+
+    Returns:
+        bool: True if sentences are similar, False otherwise.
+    """
+    a_words = set(a.lower().split())
+    b_words = set(b.lower().split())
+    overlap = len(a_words & b_words)
+    return overlap / max(len(a_words), len(b_words)) > max_similarity
+
+
 def extract_key_points(text, max_points=5):
     """
     Extract key points from the given text.
@@ -129,14 +220,18 @@ def extract_key_points(text, max_points=5):
     Returns:
         str: A string containing key points.
     """
-    sentences = text.split(".")
-    key_points = []
+    sentences = split_sentence(text)
+    scored = []
+    total = len(sentences)
+    for idx, sent in enumerate(sentences):
+        position = idx / total
+        score = score_sentence(sent, position=position)
+        scored.append((score, sent))
 
-    # Heuristic: Select the first N sentences as key points
-    for sentence in sentences:
-        if len(sentence.strip()) > 20:  # Skip short or irrelevant sentences
-            key_points.append(sentence.strip())
-        if len(key_points) >= max_points:
-            break
+    # Sort by score descending
+    scored.sort(key=lambda x: -x[0])
 
-    return "\n".join([f"- {point}" for point in key_points])  # Format as bullet points
+    # Select top and deduplicate
+    top = [s for _, s in scored[: max_points * 2]]
+    unique = remove_redundant(top)
+    return "\n".join([f"- {s}" for s in unique[:max_points]])

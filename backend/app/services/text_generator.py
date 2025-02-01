@@ -52,12 +52,12 @@ def generate_presentation_from_content(title, tone, language, num_slides):
         # Fetch related key points
         related_key_points = search_in_vector_db(title, top_k=10)
         # TODO: Can improve search query for seaching in vector database
-        # print(f"\nRelated key points retrieved: {related_key_points}")
+        print(f"\nRelated key points retrieved: {related_key_points}")
 
         related_text = (
             " ".join(related_key_points) if related_key_points else ""
         )  # Combine key points into a single string
-        # print(f"\nRelated text length: {len(related_text)}")
+        print(f"\nRelated text length: {len(related_text)}")
 
         # Prepare prompt for ChatGroq
         messages = [
@@ -79,7 +79,7 @@ def generate_presentation_from_content(title, tone, language, num_slides):
         
         response = response['raw'].content
         response = json.loads(response)
-        # print(f"{response}")
+        print(f"\nResponse: {response}")
 
         # Pass title and slides content to create_presentation
         create_presentation(response)
