@@ -204,9 +204,11 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         // for (const pair of formDataToSend.entries()) {
         //     console.log(pair[0], pair[1]);
         // }
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/user/generate_presentation', {
+            // const response = await fetch('http://127.0.0.1:10000/api/user/generate_presentation', {
+            const response = await fetch(`${backendUrl}/api/user/generate_presentation`, {
                 method: 'POST',
                 body: formDataToSend,
             });

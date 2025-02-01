@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.prisma_client import connect_to_db, disconnect_from_db
 from contextlib import asynccontextmanager
 
-# Get frontend URLs from environment variables (default to localhost for development)
 FRONTEND_URLS = os.getenv(
     "FRONTEND_URLS", "http://localhost:5173,https://promptslide.vercel.app"
 )
@@ -19,9 +18,7 @@ async def lifespan(app: FastAPI):
         await connect_to_db()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-
-    yield  # Run the app while active
-
+    yield
     try:
         await disconnect_from_db()
     except Exception as e:
@@ -30,7 +27,6 @@ async def lifespan(app: FastAPI):
         )
 
 
-# Create the FastAPI app instance
 app = FastAPI(
     title="PromptSlide API",
     description="An API for generating and editing PowerPoint presentations.",
@@ -38,7 +34,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=frontend_urls,
@@ -47,7 +42,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register all routers
 app.include_router(register.router, prefix="/api/user", tags=["New User"])
 app.include_router(user_input.router, prefix="/api/user", tags=["User Input"])
 
@@ -57,9 +51,14 @@ async def root():
     return {"message": "Welcome to the PromptSlide API"}
 
 
-# Get port dynamically from Render, default to 8000 locally
-PORT = int(os.getenv("PORT", 8000))
+# Ensure Render sets the port dynamically
+PORT = int(os.getenv("PORT", 10000))  # Render automatically sets the PORT variable
 
-# Ensure FastAPI runs on the correct port
-if __name__ == "__main__":
+
+# Use the correct syntax to bind the app in Render
+def start():
     uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
+
+
+if __name__ == "__main__":
+    start()
