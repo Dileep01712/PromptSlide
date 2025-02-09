@@ -1,68 +1,129 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from '../ui/button';
 import Themes from '../Themes/Themes';
-import handleSwitch from '../Themes/handleSwitch';
 import ModalTooltip from "../Tooltip/ModalTooltip";
 import { useNavigation } from '../Navigation/Navigate';
 
 interface UserInputModalProps {
-    setActiveDiv: React.Dispatch<React.SetStateAction<number>>;
-    activeDiv: number;
+    themeId: number;
     closeModal: () => void;
     isOpen: boolean;
 }
 
-const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv, isOpen, closeModal }) => {
-    const [titleWarning, setTitleWarning] = useState('');
-    const [slideLimitWarning, setSlideLimitWarning] = useState('');
-    const [fileLimitWarning, setFileLimitWarning] = useState('');
+const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeModal }) => {
+    // Error messages and state
+    const [titleWarning, setTitleWarning] = useState("");
+    const [slideLimitWarning, setSlideLimitWarning] = useState("");
+    const [fileLimitWarning, setFileLimitWarning] = useState("");
     const [isHovered, setIsHovered] = useState(false);
     const [file, setFile] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { handleButtonClick } = useNavigation();
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    const [formData, setFormData] = useState<{ title: string; tone: string; language: string; numberOfSlides: number | null; style: string; }>({ title: "", tone: "Professional", language: "English", numberOfSlides: 7, style: "Default", });
+    const [formData, setFormData] = useState<{
+        title: string;
+        tone: string;
+        language: string;
+        numberOfSlides: string;
+        style: number;
+    }>({
+        title: "",
+        tone: "Professional",
+        language: "English",
+        numberOfSlides: "7",
+        style: themeId ?? 1,
+    });
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = event.target.value; // Get raw input value
+    // Synchronous validation helper function for title
+    const validateTitle = (value: string): string => {
+        const trimmed = value.trim();
+        const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
 
-        if (inputValue === "" || isNaN(Number(inputValue))) {
-            // If the input is empty or not a number, set a warning and don't update the slide count
+        // Condition 1: Disallow URLs in the title.
+        const urlPattern = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
+        if (urlPattern.test(value)) return "Links are not allowed in the title!";
+
+        // Condition 2: Ensure title is not empty.
+        if (!trimmed) return "Title cannot be empty!";
+
+        // Condition 3: Check for minimum word count.
+        if (wordCount < 2) return "Title must have at least 2 words.";
+
+        // Condition 4: Check for maximum word count.
+        if (wordCount > 15) return "Title cannot exceed 15 words.";
+
+        // Condition 5: Minimum character length.
+        if (trimmed.length < 10) return "Title must be at least 10 characters long.";
+
+        // Condition 5: Disallow HTML tags.
+        const htmlTagPattern = /<\/?[a-z][\s\S]*?>/i;
+        if (htmlTagPattern.test(value)) return "HTML tags are not allowed in the title!";
+
+        // Condition 6: Ensure title contains at least one meaningful word
+        const meaningfulWordPattern = /\b[a-zA-Z]{3,}\b/;
+        if (!meaningfulWordPattern.test(trimmed)) return "Title must contain at least one meaningful word (min 3 letters).";
+
+        return "";
+    };
+
+    // Synchronous validation helper function for number of slides
+    const validateSlides = (value: number): string => {
+        if (value === null) return "The number of slides is required.";
+        if (value < 6 || value > 15) return "The number should be between 6 and 15.";
+        return "";
+    };
+
+    // Input change handler
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = event.target.value;
+        const warningMessage = validateTitle(inputValue);
+        setTitleWarning(warningMessage);
+        setFormData((prev) => ({ ...prev, title: inputValue }));
+    };
+
+    // Input change handler
+    const handleSlideChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // Get the string value from the input
+        const inputValue = event.target.value;
+
+        // Always update the state with the string from the input
+        setFormData((prev) => ({ ...prev, numberOfSlides: inputValue }));
+
+        // If the field is empty, set a warning and return immediately.
+        if (inputValue === "") {
             setSlideLimitWarning("The number of slides is required.");
-            setFormData((prev) => ({ ...prev, numberOfSlides: null }));
             return;
         }
 
-        // Update the number of slides even if it's out of range
-        setFormData((prev) => ({ ...prev, numberOfSlides: numericValue }));
-        const numericValue = parseInt(inputValue, 10); // Convert to number
+        // Try to parse the input as a number
+        const numericValue = parseInt(inputValue, 10);
 
-        if (numericValue < 6 || numericValue > 15) {
-            // Display a warning if the value is outside the range
-            setSlideLimitWarning("The number should be between 6 and 15.");
-        } else {
-            // Clear the warning and update the value
-            setSlideLimitWarning("");
-            setFormData((prev) => ({ ...prev, numberOfSlides: numericValue }));
+        // If the parsing fails, show an error
+        if (isNaN(numericValue)) {
+            setSlideLimitWarning("Invalid number.");
+            return;
         }
+
+        // Validate the numeric value (your validateSlides should expect a number)
+        const warningMessage = validateSlides(numericValue);
+        setSlideLimitWarning(warningMessage);
     };
 
+    // Generate presentation button
     const handleMouseEnter = () => {
         setIsHovered(true);
-
         setTimeout(() => {
             setIsHovered(false);
         }, 300);
     };
 
-    // Upload files: Warning
+    // Upload file handler
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
 
         if (files) {
             const fileArray = Array.from(files);
 
-            // Check if total files exceed 2
+            // Check if total files exceed 1
             if (fileArray.length + file.length > 1) {
                 setFileLimitWarning("You can only upload up to 1 file.");
                 setTimeout(() => {
@@ -71,7 +132,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 return;
             }
 
-            // Filter valid files based on size (max 20MB)
+            // Filter valid files based on size (max 10MB)
             const filteredFiles = fileArray.filter((file) => {
                 const validFileTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
 
@@ -96,7 +157,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 return true;
             });
 
-            // Function to truncate file names to 35 characters (with ellipsis)
+            // Truncate file names to 35 characters (with ellipsis) if needed
             const truncateFileName = (name: string, maxLength: number) => {
                 if (name.length <= maxLength) return name; // Show the full name if it's within the limit
                 const start = name.substring(0, 16); // First 16 characters
@@ -118,6 +179,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         }
     };
 
+    // Remove file handler
     const handleRemoveFile = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
         event.preventDefault();
         const updatedFiles = file.filter((_, i) => i !== index);
@@ -136,79 +198,54 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
         }
     };
 
-    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = event.target.value;
-        const wordCount = inputValue.trim().split(/\s+/).filter(word => word.length > 0).length;
-
-        // Strict URL pattern
-        const urlPattern = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
-
-        let warningMessage = '';
-
-        // Check if the title contains a link
-        if (urlPattern.test(inputValue)) {
-            warningMessage = "Links are not allowed in the title!";
-        }
-        // Check if the title is empty
-        else if (!inputValue.trim()) {
-            warningMessage = "Title cannot be empty!";
-        }
-        // Check for word limit
-        else if (wordCount < 2) {
-            warningMessage = "Title must have at least 2 words.";
-        }
-        else if (wordCount > 15) {
-            warningMessage = "Title cannot exceed 15 words.";
-        }
-
-        setTitleWarning(warningMessage); // Set the final warning message
-
-        // Update the form data  
-        setFormData((prev) => ({ ...prev, title: inputValue }));
-    };
-
-    useEffect(() => {
-        // Function to handle screen resize
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        // Add event listener
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup event listener on component unmount
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+    // Handler to update the formData style when a theme is selected
+    const handleThemeSelect = (selectedThemeId: number) => {
+        setFormData((prevData) => ({ ...prevData, style: selectedThemeId }));
+        console.log("Updated formData style:", selectedThemeId);
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        const formDataToSend = new FormData();
-        formDataToSend.append('title', formData.title || '');
-        formDataToSend.append('tone', formData.tone || 'Professional');
-        formDataToSend.append('language', formData.language || 'English');
-        formDataToSend.append('num_slides', formData.numberOfSlides !== null ? formData.numberOfSlides.toString() : '7');
-        formDataToSend.append('style', formData.style || 'Default');
-
-        if (file.length > 0) {
-            // Only append up to 2 files
-            for (let i = 0; i < file.length; i++) {
-                formDataToSend.append('file', file[i]); // Append files correctly
-            }
+        // Run validations immediately
+        const titleError = validateTitle(formData.title);
+        const slidesError = validateSlides(Number(formData.numberOfSlides));
+        let fileError = "";
+        if (file.length > 1) {
+            fileError = "You can only upload up to 1 file.";
         }
 
-        // console.log("Form Data Sent to Backend:", formData);
+        // Update error state for display
+        setTitleWarning(titleError);
+        setSlideLimitWarning(slidesError);
+        setFileLimitWarning(fileError);
 
-        // for (const pair of formDataToSend.entries()) {
-        //     console.log(pair[0], pair[1]);
-        // }
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        // Block submission if any error exists
+        if (titleError || slidesError || fileError) {
+            console.log("Form has errors. Submission blocked.");
+            return;
+        }
+
+        // Prepare form data for submission
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.title);
+        formDataToSend.append('tone', formData.tone);
+        formDataToSend.append('language', formData.language);
+        formDataToSend.append('num_slides', formData.numberOfSlides.toString());
+        formDataToSend.append('style', formData.style.toString());
+
+        if (file.length > 0) {
+            // Only append up to 1 files
+            file.forEach((f) => formDataToSend.append("file", f));
+        }
+
+        console.log("Form Data Sent to Backend:", formData);
+        for (const pair of formDataToSend.entries()) {
+            console.log(pair[0], pair[1]);
+        }
 
         try {
-            // const response = await fetch('http://127.0.0.1:10000/api/user/generate_presentation', {
-            const response = await fetch(`${backendUrl}/api/user/generate_presentation`, {
+            const response = await fetch('http://127.0.0.1:8000/api/user/user_input', {
                 method: 'POST',
                 body: formDataToSend,
             });
@@ -217,36 +254,31 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                 throw new Error('Failed to submit form');
             }
 
-            await response.json();
-            // console.log('Success:', result)
+            const result = await response.json();
+            console.log('Success:', result)
 
-            // Clear form fields after submission
+            // Clear form and file inputs after successfull submission
             setFormData({
                 title: '',
                 tone: 'Professional',
                 language: 'English',
-                numberOfSlides: 7,
-                style: 'Default',
+                numberOfSlides: "7",
+                style: 1,
             });
-
-            // Clear file input
             setFile([]);
-
-            // Reset the file input element value to allow re-upload of the same file
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
-
         } catch (error) {
             console.log('Error:', error)
         }
-    }
+    };
 
     return (
         <>
             {isOpen && (
                 <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/50 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-fit mt-32">
+                    <div className="lg:w-1/2 md:w-fit mt-28">
                         {/* Modal content */}
                         <div className="p-5 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
 
@@ -261,18 +293,18 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                             </div>
 
                             <form method='post' className="font-Lato" onSubmit={handleSubmit}>
-                                {/* Modal Input Prompt */}
-                                <div className="md:h-24 pb-2">
+                                {/* Topic Input */}
+                                <div className="md:h-24 pb-4">
                                     <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Topic</h3>
-                                    <input type="text" value={formData.title} onChange={(e) => { setFormData({ ...formData, title: e.target.value }); handleTitleChange(e) }} className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
+                                    <input type="text" value={formData.title} onChange={handleTitleChange} className="md:h-auto h-8 border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none text-sm" placeholder="The negative effects of social media" />
                                     {/* Warning Message */}
                                     {titleWarning && (
                                         <p className="text-red-500 text-xs absolute">{titleWarning}</p>
                                     )}
                                 </div>
 
-                                {/* Modal Dropdown List */}
-                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-3 flex-wrap">
+                                {/* Dropdowns for Writing Tone, Language, and Number of Slides */}
+                                <div className="gap-4 w-full flex flex-col sm:flex-row md:h-24 pb-4 flex-wrap">
                                     {/* Writing Tone */}
                                     <div>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Writing tone</h3>
@@ -302,7 +334,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                     {/* Number of Slides */}
                                     <div className='flex-1 lg:flex-0'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
-                                        <input type="number" required value={formData.numberOfSlides !== null ? formData.numberOfSlides : ""} onChange={handleInputChange} min={6} max={15} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
+                                        <input type="number" required value={formData.numberOfSlides} onChange={handleSlideChange} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
                                         {slideLimitWarning && (
                                             <p className="text-red-500 text-xs absolute">{slideLimitWarning}</p>
@@ -310,11 +342,12 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                     </div>
                                 </div>
 
-                                {/* Modal Upload Files */}
-                                <div className="md:mb-8 md:h-16 md:pb-0 h-fit">
+                                {/* Files Upload Section */}
+                                <div className="md:pb-0 md:h-24 pb-3">
+                                    {/* Upload file tittel */}
                                     <div className="flex justify-between">
                                         <div className="flex">
-                                            <h3 className="md:text-lg text-base mr-1 text-black dark:text-white font-semibold">Upload files <span className="text-sm text-gray-600 dark:text-gray-300 font-Degular">(optional)</span>
+                                            <h3 className="md:text-lg text-base mr-1 text-black dark:text-white font-semibold">Upload file{" "}<span className="text-sm text-gray-600 dark:text-gray-300 font-Degular">(optional)</span>
                                             </h3>
                                             <ModalTooltip text="You can upload a PDF or Word document for more details (maximum 1 file)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} className="h-5 w-5 cursor-pointer">
@@ -324,23 +357,32 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                         </div>
                                     </div>
 
-                                    <div className="grid flex-col mt-2">
+                                    <div className="grid flex-col my-2">
                                         <div className="grid md:grid-flow-col justify-start">
                                             {/* Hidden file input */}
-                                            <input type="file" accept=".pdf, .docx" multiple onChange={handleFileChange} ref={fileInputRef} className="hidden" />
+                                            <input type="file" accept=".pdf, .docx" onChange={handleFileChange} ref={fileInputRef} className="hidden" />
 
-                                            {/* Button to trigger file input */}
-                                            <Button type="button" onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border-2 h-9 text-sm w-fit sm:mr-2 sm:mb-0 select-none hover:border-gray-300">
-                                                Upload File
-                                            </Button>
+                                            {/* Button and warning container (for md+) */}
+                                            <div className="md:relative">
+                                                <Button type="button" onClick={handleFileButtonClick} variant='outline' className="font-Lato rounded border-2 h-9 text-sm w-fit sm:mr-2 sm:mb-0 select-none dark:hover:border-gray-300 hover:border-black">
+                                                    Upload File
+                                                </Button>
+
+                                                {/* Warning message (visible only on md+ screens) */}
+                                                {fileLimitWarning && (
+                                                    <p className="hidden md:block text-red-500 text-xs md:absolute w-96 mt-0.5">
+                                                        {fileLimitWarning}
+                                                    </p>
+                                                )}
+                                            </div>
 
                                             {/* List of uploaded files */}
-                                            <div className={`flex flex-wrap md:ml-1 w-full md:mt-0 ${file.length > 0 ? "h-14" : "h-1"}`}>
+                                            <div className={`flex flex-wrap md:ml-1 w-full md:mt-0 ${file.length > 0 ? "md:h- h-12" : "md:h-14"}`}>
                                                 {file.length > 0 && (
                                                     <ul className="flex flex-wrap gap-3 md:mt-0 mt-2 h-fit">
-                                                        {file.map((file, index) => (
+                                                        {file.map((f, index) => (
                                                             <li key={index} className="flex items-center justify-between bg-gray-200 dark:bg-gray-950 p-1 rounded h-9 w-full sm:w-auto">
-                                                                <span className="text-sm">{file.name}</span>
+                                                                <span className="text-sm">{f.name}</span>
                                                                 <Button variant='outline' className="ml-2 rounded-full w-5 h-5 flex items-center justify-center p-2.5" onClick={(event) => handleRemoveFile(event, index)}>
                                                                     &#10005; {/* X Button */}
                                                                 </Button>
@@ -349,44 +391,24 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ activeDiv, setActiveDiv
                                                     </ul>
                                                 )}
                                             </div>
-                                        </div>
-                                        <div className="bottom-0 h-fit -mt-3">
-                                            {/* Warning Message */}
-                                            {fileLimitWarning && (
-                                                <p className="text-red-500 text-xs">{fileLimitWarning}</p>
-                                            )}
+
+                                            {/* Warning message (mobile - hidden on md+) */}
+                                            <div className="md:hidden mt-0.5">
+                                                {fileLimitWarning && (
+                                                    <p className="text-red-500 text-xs">{fileLimitWarning}</p>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Modal Themes Buttons */}
+                                {/* Style Section */}
                                 <div>
-                                    <h2 className='text-lg text-black dark:text-white font-semibold mb-2'>Style</h2>
+                                    <h2 className='text-lg text-black dark:text-white font-semibold mb-2'>Styles</h2>
+                                    {/* Style Previews*/}
                                     <div>
-                                        {/* Dropdown for small devices */}
-                                        <div className="md:hidden mb-3 dark:text-black">
-                                            <select className="bg-white pl-4 border border-gray-300 h-8 w-full rounded focus:outline-none focus:border-gray-900" onChange={(e) => handleSwitch(setActiveDiv, Number(e.target.value))} value={activeDiv} > // Keep the selected option in sync with the active div
-                                                <option value={1}>Essential Aesthetics</option>
-                                                <option value={2}>Polished Presentation</option>
-                                            </select>
-                                        </div>
-
-                                        {/* Dropdown for larger screens */}
-                                        <div className={`hidden sm:inline-flex w-full md:mb-3 ${screenWidth > 640 && screenWidth < 700 ? 'flex-wrap justify-start gap-4' : ''}`}>
-                                            <Button type="button" className={`h-9 md:mr-3 ${activeDiv === 1 ? 'border-2 border-purple-500 ' : 'hover:border-gray-300 border-2'}`} variant="outline" onClick={(e) => { e.preventDefault(); handleSwitch(setActiveDiv, 1); }} >
-                                                Essential Aesthetics
-                                            </Button>
-                                            <Button type="button" className={`h-9 ${activeDiv === 2 ? 'border-2 border-purple-500' : 'hover:border-gray-300 border-2'} ${screenWidth > 640 && screenWidth < 700 ? 'mt-4' : ''}`} variant="outline" onClick={(e) => { e.preventDefault(); handleSwitch(setActiveDiv, 2); }} >
-                                                Polished Presentation
-                                            </Button>
-                                        </div>
+                                        <Themes onThemeSelect={handleThemeSelect} />
                                     </div>
-
-                                    {/* Modal Themes Section */}
-                                    <div>
-                                        <Themes activeDiv={activeDiv} />
-                                    </div>
-
                                 </div>
 
                                 {/* Modal Generate Button */}

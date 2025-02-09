@@ -30,12 +30,32 @@ const LoginPage: React.FC = () => {
     };
 
     const login = useGoogleLogin({
-        onSuccess: (tokenResponse) => {
-            console.log(tokenResponse);
-            // Handle login success here, such as sending the token to your backend.
+        flow: "auth-code",
+        scope: "email profile",
+        redirect_uri: "http://localhost:5173",
+        onSuccess: async (response) => {
+            try {
+                // Extract the authorization code
+                const { code } = response;
+                console.log("Google OAuth Code:", code);
+
+                // Send auth code to backend for verification & token exchange
+                const { data } = await axios.post("http://127.0.0.1:8000/api/user/login/google", {
+                    auth_code: code,
+                    redirect_uri: "http://localhost:5173",
+                })
+                console.log("User logged in successfully!!")
+
+                // Store authentication token
+                localStorage.setItem("authToken", data.token)
+
+            } catch (error) {
+                handleError(error, "Google OAuth log in failed. Please try again.");
+            }
         },
         onError: () => {
-            console.log('Login failed');
+            setFormError("Google OAuth log in failed. Please try again.")
+            setShowError(true)
         },
     });
 
@@ -50,6 +70,7 @@ const LoginPage: React.FC = () => {
             email: formData.email.trim(),
             password: formData.password.trim(),
         };
+        console.log("User data: ", trimmedData);
 
         // Validate fields
         const newErrors = {
@@ -60,23 +81,27 @@ const LoginPage: React.FC = () => {
                     : "" : "Password is required",
         };
 
-        setErrors(newErrors);
-
-        // If any errors exists, stop form submission
+        // If any errors exists before setting the this.state
         if (Object.values(newErrors).some((error) => error)) {
-            return;
+            setErrors(newErrors);
+            console.log("Some kind of error is there during form submission!!");
+            return; // Stop submission if there are errors
         }
 
         try {
-            // Send data to backend for normal user registration
-            await axios.post('http://127.0.0.1:8000/api/user/login', {
+            // Send data to backend for login
+            const { data } = await axios.post('http://127.0.0.1:8000/api/user/login', {
                 user: {
                     email: trimmedData.email,
                     password: trimmedData.password,
                 }
             });
+            console.log("User logged in successfully!!")
 
-            // Clear the form data after successful submission
+            // Store authentication token
+            localStorage.setItem("authToken", data.token);
+
+            // Clear the form data after successful login
             setFormData({
                 email: '',
                 password: ''
@@ -102,24 +127,32 @@ const LoginPage: React.FC = () => {
         setShowError(true); // Show the error message on the page
     };
 
-    // Display the error for a limited time
     useEffect(() => {
         if (formError) {
             setShowError(true);
             const timer = setTimeout(() => {
-                setShowError(false); // Auto-hide the error after 7 seconds
+                setShowError(false);
             }, 7000);
-
-            return () => clearTimeout(timer); // Cleanup on unmount or formError change
+            return () => clearTimeout(timer);
         }
     }, [formError]);
+
+    // Reset errors only on component mount
+    useEffect(() => {
+        setErrors({
+            email: '',
+            password: ''
+        });
+        setFormError(null);
+        setShowError(false);
+    }, []);
 
     return (
         <>
             <div className="md:h-screen w-full mx-auto mb-4 dark:bg-zinc-950 flex items-center justify-center">
                 <div className="flex items-center justify-center">
                     <div className="flex-1 hidden md:block">
-                        <img src="../assets/UserAccess/login.webp" alt="Log in" className="w-[490px]" />
+                        <img src="../assets/UserAccess/login.webp" alt="Log in" className="w-[496.5px]" />
                     </div>
                     <div className="flex-1 px-4">
                         <form onSubmit={handleSubmit}>

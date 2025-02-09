@@ -1,4 +1,3 @@
-# type: ignore
 import os
 import sys
 import traceback
@@ -15,13 +14,13 @@ router = APIRouter()
 app.include_router(router)
 
 
-@router.post("/generate_presentation")
+@router.post("/user_input")
 async def user_data(
     title: str = Form(...),
     tone: str = Form("Professional"),
     language: str = Form("English"),
     num_slides: int = Form(7),
-    style: str = Form("Default"),
+    style: int = Form(1),
     file: List[UploadFile] = File(None),
 ):
     """
@@ -36,6 +35,18 @@ async def user_data(
         file (UploadFile, optional): Optional file upload for text extraction.
     """
     try:
+        # Additional validation to ensure no empty values
+        if not title.strip() or not tone.strip() or not language.strip():
+            raise HTTPException(status_code=400, detail="All fields must be filled in.")
+
+        print(style)
+
+        # Ensure num_slide  and style is a positive number
+        if num_slides <= 0 or style <= 0:
+            raise HTTPException(
+                status_code=400, detail="Number of slides must be a psoitive number."
+            )
+
         request_data = {
             "title": title,
             "tone": tone,

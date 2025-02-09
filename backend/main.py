@@ -1,15 +1,8 @@
-import os
-import uvicorn
 from fastapi import FastAPI, HTTPException
-from app.routers import user_input, register
+from app.routers import user_input, signup, login
 from fastapi.middleware.cors import CORSMiddleware
 from app.prisma_client import connect_to_db, disconnect_from_db
 from contextlib import asynccontextmanager
-
-FRONTEND_URLS = os.getenv(
-    "FRONTEND_URLS", "http://localhost:5173,https://promptslide.vercel.app"
-)
-frontend_urls = [url.strip() for url in FRONTEND_URLS.split(",") if url.strip()]
 
 
 @asynccontextmanager
@@ -27,6 +20,7 @@ async def lifespan(app: FastAPI):
         )
 
 
+# Create the FastAPI app instance
 app = FastAPI(
     title="PromptSlide API",
     description="An API for generating and editing PowerPoint presentations.",
@@ -34,31 +28,24 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=frontend_urls,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["http://localhost:5173"],  # Frontend origin
+    allow_credentials=True,  # Allow cookies or credentials if needed
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
-app.include_router(register.router, prefix="/api/user", tags=["New User"])
+# Register all routers
+app.include_router(signup.router, prefix="/api/user", tags=["Sign up"])
+app.include_router(login.router, prefix="/api/user", tags=["Log in"])
 app.include_router(user_input.router, prefix="/api/user", tags=["User Input"])
 
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the PromptSlide API"}
-
-
-# Ensure Render sets the port dynamically
-PORT = int(os.getenv("PORT", 10000))  # Render automatically sets the PORT variable
-
-
-# Use the correct syntax to bind the app in Render
-def start():
-    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
-
-
-if __name__ == "__main__":
-    start()
+    return {
+        "message": "PromptSlide Backend API is running!!",
+        "docs": "/docs",
+    }

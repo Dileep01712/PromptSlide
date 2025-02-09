@@ -1,4 +1,3 @@
-# type: ignore
 import os
 from dotenv import load_dotenv
 from passlib.hash import bcrypt
@@ -7,7 +6,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from fastapi import APIRouter, HTTPException, Body
 from app.prisma_client import prisma, connect_to_db
-from app.schemas.user_schema import RegisterRequest, UserResponse
+from app.schemas.user_schema import SignupRequest, UserResponse
 
 load_dotenv()
 
@@ -18,9 +17,10 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_TOKEN_URL = os.getenv("GOOGLE_TOKEN_URL")
 
 
-@router.post("/register", response_model=UserResponse)
+# Normal Sign up
+@router.post("/signup", response_model=UserResponse)
 async def register_user(
-    body: RegisterRequest = Body(...),
+    body: SignupRequest = Body(...),
 ):
     """
     Handles normal user registration.
@@ -69,11 +69,18 @@ async def register_user(
         )
 
 
-@router.post("/register/google", response_model=UserResponse)
+# Google Sign up
+@router.post("/signup/google", response_model=UserResponse)
 async def register_user_google(
     auth_code: str = Body(...), redirect_uri: str = Body(...)
 ):
     try:
+        # Ensure GOOGLE_TOKEN_URL is set
+        if not GOOGLE_TOKEN_URL:
+            raise HTTPException(
+                status_code=500, detail="GOOGLE_TOKEN_URL is not configured."
+            )
+
         # Exchange the auth code for tokens
         token_response = http_requests.post(
             GOOGLE_TOKEN_URL,
@@ -102,7 +109,7 @@ async def register_user_google(
             )
 
         id_info = id_token.verify_oauth2_token(
-            id_token_str, requests.Request(), GOOGLE_CLIENT_ID
+            id_token_str, requests.Request(), GOOGLE_CLIENT_ID, clock_skew_in_seconds=10
         )
 
         email = id_info.get("email")

@@ -2,15 +2,15 @@ from pydantic import BaseModel, EmailStr
 
 
 # Schema for normal form signup
-class NormalSignup(BaseModel):
+class Signup(BaseModel):
     firstName: str
     lastName: str
     email: EmailStr
     password: str
 
 
-class RegisterRequest(BaseModel):
-    user: NormalSignup
+class SignupRequest(BaseModel):
+    user: Signup
 
 
 # Schema for Google signup
@@ -30,3 +30,12 @@ class UserResponse(BaseModel):
     # Allows Pydantic to map database attributes to the response schema
     class Config:
         from_attributes = True
+
+
+class Login(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class LoginRequest(BaseModel):
+    user: Login

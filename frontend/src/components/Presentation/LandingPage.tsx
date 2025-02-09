@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
                                 If you're feeling uninspired or short on time, it's smart to ask for help. PromptSlide is here to assist you with its new feature—the AI presentation maker! With just a few clicks, you can create amazing slideshows that fit your needs. Best of all, it's completely free!
                             </p>
                             <div className='flex flex-col items-center justify-center mx-auto lg:mx-0 sm:flex-row group w-fit font-Degular my-3 md:mb-8 rounded-full'>
-                                <Button className="h-14 px-8 rounded-full text-white dark:text-black text-xl font-semibold flex items-center gap-4 select-none" onClick={() => handleButtonClick('/create-presentation')}>
+                                <Button className="h-14 px-8 rounded-full text-white dark:text-black text-xl font-semibold flex items-center gap-4 select-none" onClick={() => handleButtonClick('/user_input')}>
                                     Get Started
                                     <FontAwesomeIcon icon={faArrowRight} className="transition-transform transform group-hover:translate-x-1" />
                                 </Button>

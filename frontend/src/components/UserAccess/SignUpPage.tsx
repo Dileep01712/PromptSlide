@@ -26,9 +26,6 @@ const RegisterPage: React.FC = () => {
         password: ''
     });
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-
     // Handles input changes and clears field-specific errors on user input
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -39,30 +36,26 @@ const RegisterPage: React.FC = () => {
     const signup = useGoogleLogin({
         flow: "auth-code", // 'auth-code' flow for server-side token exchange
         scope: "email profile", // Define the required Google scopes
-        redirect_uri: "https://promptslide.vercel.app/auth/callback", // Must match the backend and Google Cloud Console
+        redirect_uri: "http://localhost:5173", // Must match the backend and Google Cloud Console
         onSuccess: async (response) => {
             try {
-                if (!backendUrl) {
-                    console.log("Backend url is missing in environment variables!");
-                    console.log(backendUrl);
-                    return null
-                }
                 // Extract the authorization code
                 const { code } = response;
-                console.log("Code: ", code)
+                console.log("Google OAuth Code: ", code);
 
                 // Send the auth code and redirect URI to the backend
-                await axios.post(`${backendUrl}/api/user/register/google`, {
+                await axios.post("http://127.0.0.1:8000/api/user/signup/google", {
                     auth_code: code, // Pass the auth code to the backend
-                    redirect_uri: "https://promptslide.vercel.app/auth/callback", // Include the redirect URI
+                    redirect_uri: "http://localhost:5173", // Include the redirect URI
                 });
+                console.log("User registered successfully!!")
 
             } catch (error) {
-                handleError(error, "Google OAuth signup failed. Please try again.");
+                handleError(error, "Google OAuth sign up failed. Please try again.");
             }
         },
         onError: () => {
-            setFormError("Google OAuth signup failed. Please try again.");
+            setFormError("Google OAuth sign up failed. Please try again.");
             setShowError(true);
         },
     });
@@ -80,8 +73,7 @@ const RegisterPage: React.FC = () => {
             email: formData.email.trim(),
             password: formData.password.trim(),
         };
-
-        console.log("Timmed data: ", trimmedData)
+        console.log("Timmed data: ", trimmedData);
 
         // Validate fields
         const newErrors = {
@@ -94,16 +86,16 @@ const RegisterPage: React.FC = () => {
                     : "" : "Password is required",
         };
 
-        setErrors(newErrors);
-
-        // If any errors exists, stop form submission
+        // If any errors exists before setting the state
         if (Object.values(newErrors).some((error) => error)) {
-            return;
+            setErrors(newErrors)
+            console.log("Some error is there during form submission!!")
+            return; // Stop submission if there are errors
         }
 
         try {
             // Send data to backend for normal user registration
-            await axios.post(`${backendUrl}/api/user/register`, {
+            await axios.post("http://127.0.0.1:8000/api/user/signup", {
                 user: {
                     firstName: trimmedData.firstName,
                     lastName: trimmedData.lastName,
@@ -111,6 +103,7 @@ const RegisterPage: React.FC = () => {
                     password: trimmedData.password,
                 }
             });
+            console.log("User registered successfully!!")
 
             // Clear the form data after successful submission
             setFormData({
@@ -140,17 +133,28 @@ const RegisterPage: React.FC = () => {
         setShowError(true); // Show the error message on the page
     };
 
-    // Display the error for a limited time
     useEffect(() => {
         if (formError) {
             setShowError(true);
             const timer = setTimeout(() => {
-                setShowError(false); // Auto-hide the error after 7 seconds
+                setShowError(false);
             }, 7000);
 
-            return () => clearTimeout(timer); // Cleanup on unmount or formError change
+            return () => clearTimeout(timer);
         }
     }, [formError]);
+
+    // Reset errors only on component mount
+    useEffect(() => {
+        setErrors({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: ''
+        });
+        setFormError(null);
+        setShowError(false);
+    }, []);
 
     return (
         <>

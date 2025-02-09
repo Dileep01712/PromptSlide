@@ -58,7 +58,7 @@ const App: React.FC = () => {
 
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   if (!googleClientId) {
-    console.log("Google Client ID is missing in environment variables!");
+    console.log("VITE_GOOGLE_CLIENT_ID is missing in environment variables!");
     return null
   }
 
@@ -69,7 +69,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path='/' element={<LandingPage />} />
             <Route
-              path='/create-presentation'
+              path='/user_input'
               element={<CreatePresentation />}
             />
             <Route
