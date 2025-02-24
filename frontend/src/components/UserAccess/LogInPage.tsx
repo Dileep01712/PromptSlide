@@ -7,20 +7,34 @@ import CommonFooter from '../Footer/CommonFooter';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from 'react-router-dom';
+import { BiLoaderCircle } from "react-icons/bi";
+import { useAuth } from '../context/useAuth';
+import { useAccess } from '../context/useAccess';
 
 const LoginPage: React.FC = () => {
     const { handleButtonClick } = useNavigation();
     const [formError, setFormError] = useState<string | { msg: string } | null>(null);
     const [showError, setShowError] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        email: string;
+        password: string;
+    }>({
         email: '',
-        password: ''
+        password: '',
     });
+
     const [errors, setErrors] = useState({
         email: '',
         password: ''
     });
+    const navigate = useNavigate();
+    const [isNormalLoginLoading, setIsNormalLoginLoading] = useState(false);
+    const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
+    const { setRefreshToken } = useAuth();
+    const { allowAccess } = useAccess();
+    localStorage.getItem("refreshToken"); // Check if user is logged in
 
     // Handles input changes and clears field-specific errors on user input
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,40 +43,139 @@ const LoginPage: React.FC = () => {
         setErrors((prev) => ({ ...prev, [id]: '' })); // Clear error for this field
     };
 
+    // Helper function to submit pending PPT data after login
+    const submitPendingPPT = async (token: string): Promise<boolean> => {
+        const pendingPPT = localStorage.getItem("pendingPPT");
+        const base64File = localStorage.getItem("pendingPPTFile") || null;
+
+        if (!pendingPPT) return false;
+        console.log(`PendingPPT: ${pendingPPT}, base64File: ${base64File}`)
+
+        try {
+            const pendingData = JSON.parse(pendingPPT);
+            const formDataToSend = new FormData();
+
+            // Append all fields from pending data
+            Object.entries(pendingData).forEach(([key, value]) => {
+                formDataToSend.append(key, String(value));
+            });
+
+            if (base64File) {
+                // Extract the MIME type from the Base64 string
+                // Example prefix: "data:application/pdf;base64," or "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,"
+                const mimeStringMatch = base64File.match(/^data:([^;]+);/);
+                const mimeType = mimeStringMatch ? mimeStringMatch[1] : "application/octet-stream";
+
+                // Determine a filename based on MIME type
+                let fileName = "document";
+                if (mimeType === "application/pdf") {
+                    fileName += ".pdf";
+                } else if (
+                    mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                    mimeType === "application/msword"
+                ) {
+                    fileName += ".docx";
+                }
+
+                // Remove the data URL prefix and decode the Base64 string
+                const base64Data = base64File.split(",")[1];
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: mimeType });
+
+                // Create a File object from the blob
+                const restoredFile = new File([blob], fileName, { type: mimeType });
+
+                // Append the restored file (FastAPI expects this as an UploadFile)
+                formDataToSend.append("file", restoredFile, restoredFile.name);
+                // console.log(`Restored File: ${restoredFile}`);
+            }
+            for (const pair of formDataToSend.entries()) {
+                console.log(pair[0], pair[1]);
+            }
+
+            // Note: Do not manually set Content-Type; let the browser handle it
+            const response = await fetch("http://127.0.0.1:8000/api/user/user_input", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: formDataToSend,
+            });
+
+            if (response.ok) {
+                localStorage.removeItem("pendingPPT");
+                localStorage.removeItem("pendingPPTFile");
+                allowAccess();
+                navigate("/ppt_viewer");
+                return true;
+            } else {
+                console.error("Failed to submit pending data", await response.text());
+                return false;
+            }
+        } catch (error) {
+            console.error("Error submitting pending PPT:", error);
+            return false;
+        }
+    };
+
+    // Google login flow
     const login = useGoogleLogin({
         flow: "auth-code",
         scope: "email profile",
         redirect_uri: "http://localhost:5173",
         onSuccess: async (response) => {
+            // Start loading immediately when login is triggered
+            setIsGoogleLoginLoading(true);
             try {
-                // Extract the authorization code
                 const { code } = response;
                 console.log("Google OAuth Code:", code);
 
-                // Send auth code to backend for verification & token exchange
+                // Exchange the auth code for a token via your backend
                 const { data } = await axios.post("http://127.0.0.1:8000/api/user/login/google", {
                     auth_code: code,
                     redirect_uri: "http://localhost:5173",
-                })
-                console.log("User logged in successfully!!")
+                });
+                console.log("User logged in successfully via Google!!");
 
-                // Store authentication token
-                localStorage.setItem("authToken", data.token)
+                // Extract refresh token from response
+                const refreshToken = data.refresh_token;
 
+                setRefreshToken(refreshToken);
+
+                // Store token in localStorage
+                localStorage.setItem("refreshToken", refreshToken);
+
+                // Remove refresh token after 7 days (force logout)
+                setTimeout(() => {
+                    localStorage.removeItem("refreshToken");
+                    navigate("/login"); // Redirect user to login page
+                }, 7 * 24 * 60 * 60 * 1000); // 7 days
+
+                // Submit any pending PPT data
+                const pendingSubmitted = await submitPendingPPT(data.token);
+                if (!pendingSubmitted) {
+                    navigate("/")
+                }
             } catch (error) {
                 handleError(error, "Google OAuth log in failed. Please try again.");
+            } finally {
+                setIsGoogleLoginLoading(false); // Stop the loading indicator regardless of success or error
             }
         },
         onError: () => {
-            setFormError("Google OAuth log in failed. Please try again.")
-            setShowError(true)
+            setFormError("Google OAuth log in failed. Please try again.");
+            setShowError(true);
         },
     });
 
+    // Normal form login flow
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        // Clear formError before validating
+        // Clear any previous errors
         setFormError("");
 
         // Trim spaces before validation
@@ -78,38 +191,59 @@ const LoginPage: React.FC = () => {
             password: trimmedData.password
                 ? trimmedData.password.length < 8
                     ? "Password must be at least 8 characters long"
-                    : "" : "Password is required",
+                    : ""
+                : "Password is required",
         };
 
-        // If any errors exists before setting the this.state
+        // Stop submission if there are any errors
         if (Object.values(newErrors).some((error) => error)) {
             setErrors(newErrors);
-            console.log("Some kind of error is there during form submission!!");
-            return; // Stop submission if there are errors
+            console.log("Some error is there during form submission!!");
+            return;
         }
 
+        setIsNormalLoginLoading(true); // No errors, start loading animation
+
         try {
-            // Send data to backend for login
-            const { data } = await axios.post('http://127.0.0.1:8000/api/user/login', {
+            // Send login data to backend
+            const { data } = await axios.post("http://127.0.0.1:8000/api/user/login", {
                 user: {
                     email: trimmedData.email,
                     password: trimmedData.password,
-                }
+                },
             });
-            console.log("User logged in successfully!!")
+            console.log("User logged in successfully via form!!");
 
-            // Store authentication token
-            localStorage.setItem("authToken", data.token);
+            // Extract refresh token from response
+            const refreshToken = data.refresh_token;
+
+            setRefreshToken(refreshToken);
+
+            // Store token in localStorage
+            localStorage.setItem("refreshToken", refreshToken);
+
+            // Remove refresh token after 7 days (force logout)
+            setTimeout(() => {
+                localStorage.removeItem("refreshToken");
+                navigate("/login"); // Redirect user to login page
+            }, 7 * 24 * 60 * 60 * 1000); // 7 days
 
             // Clear the form data after successful login
             setFormData({
-                email: '',
-                password: ''
+                email: "",
+                password: "",
             });
 
+            // Submit any pending PPT data
+            const pendingSubmitted = await submitPendingPPT(data.token);
+            if (!pendingSubmitted) {
+                navigate("/");
+            }
         } catch (error) {
             handleError(error, "Log in failed. Please try again.");
-            setShowError(true)
+            setShowError(true);
+        } finally {
+            setIsNormalLoginLoading(false); // Stop loading regardless of the outcome
         }
     };
 
@@ -151,7 +285,7 @@ const LoginPage: React.FC = () => {
         <>
             <div className="md:h-screen w-full mx-auto mb-4 dark:bg-zinc-950 flex items-center justify-center">
                 <div className="flex items-center justify-center">
-                    <div className="flex-1 hidden md:block">
+                    <div className="flex-1 hidden md:block select-none">
                         <img src="../assets/UserAccess/login.webp" alt="Log in" className="w-[496.5px]" />
                     </div>
                     <div className="flex-1 px-4">
@@ -210,7 +344,13 @@ const LoginPage: React.FC = () => {
                             </div>
 
                             <div className="mx-auto my-5">
-                                <Button type="submit" className="font-Lato w-full select-none">Log in</Button>
+                                <Button type="submit" className="font-Lato w-full select-none mb-1">
+                                    {isNormalLoginLoading ? (
+                                        <BiLoaderCircle className="animate-spin h-9 w-9" />
+                                    ) : (
+                                        <span>Log in</span>
+                                    )}
+                                </Button>
                             </div>
 
                             <div className="my-5 relative flex items-center">
@@ -222,8 +362,14 @@ const LoginPage: React.FC = () => {
 
                             <div className="flex justify-center items-center mx-auto my-5 font-Lato">
                                 <Button type='button' onClick={() => login()} className="w-full select-none">
-                                    <img src="./assets/UserAccess/google.svg" alt="Google Logo" className="h-6 mr-3" />
-                                    Log in with Google
+                                    {isGoogleLoginLoading ? (
+                                        <BiLoaderCircle className="animate-spin h-9 w-9" />
+                                    ) : (
+                                        <>
+                                            <img src="./assets/UserAccess/google.svg" alt="Google Logo" className="h-6 mr-3" />
+                                            <span>Log in with Google</span>
+                                        </>
+                                    )}
                                 </Button>
                             </div>
 

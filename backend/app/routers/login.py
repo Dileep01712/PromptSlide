@@ -24,18 +24,16 @@ GOOGLE_TOKEN_URL = os.getenv("GOOGLE_TOKEN_URL")
 SECRET_KEY = os.getenv("JWT_SECRET", "")  # Use a secure secret key
 ALGORITHAM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60  # Token expiry time
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 
-def create_jwt_token(data: dict) -> str:
+def create_jwt_token(data: dict, expires_delta: datetime.timedelta):
     """
-    Generate JWT token for authentication.
+    Generate JWT token with expiry.
     """
     payload = data.copy()
-    expire = datetime.datetime.utcnow() + datetime.timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
-    payload.update({"exp": expire})  # Add expiry time
-
+    expire = datetime.datetime.utcnow() + expires_delta
+    payload.update({"exp": expire})
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHAM)
 
 
@@ -60,7 +58,15 @@ async def login_user(body: LoginRequest = Body(...)):
             raise HTTPException(status_code=400, detail="Invalid email or password.")
 
         # Create JWT token
-        token = create_jwt_token({"id": existing_user.id, "email": existing_user.email})
+        # access_token = create_jwt_token(
+        #     {"id": existing_user.id, "email": existing_user.email},
+        #     datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        # )
+        
+        refresh_token = create_jwt_token(
+            {"id": existing_user.id, "email": existing_user.email},
+            datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        )
 
         # Return user data with token
         return {
@@ -68,7 +74,7 @@ async def login_user(body: LoginRequest = Body(...)):
             "firstName": existing_user.firstName,
             "lastName": existing_user.lastName,
             "email": existing_user.email,
-            "token": token,
+            "refresh_token": refresh_token,
         }
 
     except HTTPException as http_exc:
@@ -132,7 +138,17 @@ async def login_user_google(auth_code: str = Body(...), redirect_uri: str = Body
             )
 
         # Create JWT token
-        token = create_jwt_token({"id": existing_user.id, "email": existing_user.email})
+        # access_token = create_jwt_token(
+        #     {"id": existing_user.id, "email": existing_user.email},
+        #     datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        # )
+        
+        refresh_token = create_jwt_token(
+            {"id": existing_user.id, "email": existing_user.email},
+            datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        )
+        # print("Access token: ", access_token)
+        print("Refresh token: ", refresh_token)
 
         # Return user data with token
         return {
@@ -140,7 +156,7 @@ async def login_user_google(auth_code: str = Body(...), redirect_uri: str = Body
             "firstName": existing_user.firstName,
             "lastName": existing_user.lastName,
             "email": existing_user.email,
-            "token": token,
+            "refresh_token": refresh_token,
         }
 
     except HTTPException as http_exc:

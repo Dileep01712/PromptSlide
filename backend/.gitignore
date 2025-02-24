@@ -6,3 +6,4 @@ node_modules
 # Ignore notes.txt file
 notes.txt
 sample.txt
+presentations/

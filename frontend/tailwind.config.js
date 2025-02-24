@@ -16,35 +16,35 @@ export default {
 			center: true,
 			padding: '2rem',
 			screens: {
-				'2xl': '1400px',
-			},
+				'2xl': '1400px'
+			}
 		},
 		extend: {
 			textColor: {
-				gradient: 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)',
+				gradient: 'linear-gradient(to right, #ffffff, #a855f7, #3b82f6)'
 			},
 			backgroundImage: {
 				'instagram-gradient': 'linear-gradient(35deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
-				'instagram-gradient-light': 'linear-gradient(35deg, #fcd950, #fa851e, #d23976, #a033cc, #4F5BF1)',
+				'instagram-gradient-light': 'linear-gradient(35deg, #fcd950, #fa851e, #d23976, #a033cc, #4F5BF1)'
 			},
 			transitionProperty: {
-				top: 'top',
+				top: 'top'
 			},
 			transitionDuration: {
 				'300': '300ms',
 				'500': '500ms',
 				'700': '700ms',
-				'1000': '1000ms',
+				'1000': '1000ms'
 			},
 			transitionTimingFunction: {
-				'ease-in-out': 'ease-in-out',
+				'ease-in-out': 'ease-in-out'
 			},
 			spacing: {
-				'18': '4.5rem',
+				'18': '4.5rem'
 			},
 			boxShadow: {
 				transparent: '0 1px 2px 0 rgba(0, 0, 0, 0)',
-				'top-custom': '`0 -15px 10px -2px rgba(0, 0, 0, 0.5)`',
+				'top-custom': '`0 -15px 10px -2px rgba(0, 0, 0, 0.5)`'
 			},
 			colors: {
 				bodyColor: '#212121',
@@ -59,71 +59,82 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
+					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))',
+					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))',
+					foreground: 'hsl(var(--popover-foreground))'
 				},
 				card: {
 					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))',
+					foreground: 'hsl(var(--card-foreground))'
 				},
+				chart: {
+					'1': 'hsl(var(--chart-1))',
+					'2': 'hsl(var(--chart-2))',
+					'3': 'hsl(var(--chart-3))',
+					'4': 'hsl(var(--chart-4))',
+					'5': 'hsl(var(--chart-5))'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)',
+				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
 				shimmer: {
 					'100%': {
-						transform: 'translateX(100%)',
-					},
+						transform: 'translateX(100%)'
+					}
 				},
 				'accordion-down': {
 					from: {
-						height: '0',
+						height: '0'
 					},
 					to: {
-						height: 'var(--radix-accordion-content-height)',
-					},
+						height: 'var(--radix-accordion-content-height)'
+					}
 				},
 				'accordion-up': {
 					from: {
-						height: 'var(--radix-accordion-content-height)',
+						height: 'var(--radix-accordion-content-height)'
 					},
 					to: {
-						height: '0',
-					},
+						height: '0'
+					}
 				},
 				'gradient-x': {
-					'0%, 100%': { 'background-position': 'left center' },
-					'50%': { 'background-position': 'right center' },
-				},
+					'0%, 100%': {
+						'background-position': 'left center'
+					},
+					'50%': {
+						'background-position': 'right center'
+					}
+				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'gradient-x': 'gradient-x 15s ease infinite',
-			},
-		},
+				'gradient-x': 'gradient-x 15s ease infinite'
+			}
+		}
 	},
 	plugins: [
 		tailwindcssAnimate,
@@ -152,5 +163,6 @@ export default {
 				['responsive', 'hover']
 			);
 		},
+		require("tailwindcss-animate")
 	],
 };

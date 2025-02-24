@@ -32,7 +32,7 @@ const LandingPage: React.FC = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className='flex flex-col gap-4 lg:col-span-1 pt-5 md:pt-0'>
+                        <div className='flex flex-col gap-4 lg:col-span-1 pt-5 md:pt-0 select-none'>
                             <img src="./assets/Landing/generated.webp" alt="Generated Logo" />
                         </div>
                     </header>
@@ -42,7 +42,7 @@ const LandingPage: React.FC = () => {
                         <h1 className="text-center font-Degular text-gray-900 dark:text-white mx-10 lg:text-5xl text-3xl">Features</h1>
                         <div className="lg:grid lg:grid-cols-3 mx-auto max-w-screen-xl relative px-4 p-5 lg:px-8">
                             <div className="flex flex-col sm:text-center lg:col-span-1 p-6 bg-blue-100 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
-                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
+                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden select-none'>
                                     <img src="./assets/Landing/features1.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
@@ -53,26 +53,28 @@ const LandingPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
-                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
+                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden select-none'>
                                     <img src="./assets/Landing/features2.webp" alt="Logo" />
                                 </div>
                                 <div className='pt-6'>
-                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Customizable Templates</h3>
+                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Choose Your Design</h3>
                                     <p className="text-gray-800 text-lg">
                                         You can find designs that suit any occasion, whether it’s for school, work, or personal projects. Each template is created by experts and can be easily changed to match your style.
                                     </p>
                                 </div>
                             </div>
                             <div className="flex flex-col sm:text-center lg:col-span-1 bg-blue-100 p-6 rounded-3xl shadow-lg mb-8 md:m-2 transition-transform duration-300 lg:hover:scale-105 lg:hover:shadow-xl cursor-pointer">
-                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden'>
+                                <div className='flex flex-col gap-4 lg:col-span-1 rounded-xl overflow-hidden select-none'>
                                     <img src="./assets/Landing/features3.webp" alt="Logo" className="lg:h-56 md:h-96" style={{
+                                        objectFit:"cover",
                                         height: window.innerWidth < 440 ? "11rem" : window.innerWidth >= 440 && window.innerWidth < 768
-                                            ? "319px" : ""}} />
+                                            ? "319px" : ""
+                                    }} />
                                 </div>
                                 <div className='pt-6'>
-                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Easy Editing Tools</h3>
+                                    <h3 className="text-center font-Degular text-gray-900 mb-3 lg:text-3xl text-xl">Present & Download</h3>
                                     <p className="text-gray-800 text-lg">
-                                        You can move elements around with your mouse, resize images, and change text without needing special skills. This makes it quick to create unique slides that reflect your ideas.
+                                        View your slides instantly in a built-in presentation mode, or quickly download them in both PPT and PDF formats for easy sharing and convenient offline use. No extra software needed.
                                     </p>
                                 </div>
                             </div>
@@ -101,7 +103,7 @@ const LandingPage: React.FC = () => {
                                 <div>
                                     <h3 className='text-2xl font-bold text-left mb-2 flex items-center'>Polish your content for impact</h3>
                                     <p className='text-gray-800 dark:text-white text-left mb-6 leading-normal'>
-                                        After selecting your style and tone, it’s time to refine your content. Review your slides and make any necessary adjustments to ensure clarity and coherence. This may involve editing text for conciseness, adding visuals to support your points, or rearranging slides for better flow.
+                                        After selecting your style and tone, it’s time to refine your content. Review your slides and make any necessary adjustments to ensure clarity and coherence.
                                     </p>
                                 </div>
                                 <div>
@@ -132,18 +134,6 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className='bg-gray-50 rounded-lg hover:bg-gray-100 dark:bg-zinc-950 py-2 md:px-7 px-4'>
                                 <Accordion type="single" collapsible>
-                                    <AccordionItem value="item-2">
-                                        <AccordionTrigger className="font-bold text-lg">Can I customize the presentation generated by the AI?</AccordionTrigger>
-                                        <AccordionContent className="text-gray-800 dark:text-white leading-normal text-base">
-                                            <span>
-                                                Of course! That’s the point! PromptSlide is all for customization since day one, so you’ll be able to make any changes to presentations generated by the AI. We humans are irreplaceable, after all! Thanks to the online editor, you can do whatever modifications you may need, without having to install any software. Colors, text, images, icons, placement, the final decision concerning all of the elements is up to you.
-                                            </span>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                </Accordion>
-                            </div>
-                            <div className='bg-gray-50 rounded-lg hover:bg-gray-100 dark:bg-zinc-950 py-2 md:px-7 px-4'>
-                                <Accordion type="single" collapsible>
                                     <AccordionItem value="item-1">
                                         <AccordionTrigger className="font-bold text-lg px-0.5">Are there more presentation designs available?</AccordionTrigger>
                                         <AccordionContent className="leading-normal text-gray-800 dark:text-white text-base">
@@ -161,18 +151,6 @@ const LandingPage: React.FC = () => {
                                         <AccordionContent className="text-gray-800 dark:text-white leading-normal text-base">
                                             <span>
                                                 The easiest way is to click on “Download” to get your presentation in .pdf format. But there are other options! You can click on “Present” to enter the presenter view and start presenting right away!.
-                                            </span>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                </Accordion>
-                            </div>
-                            <div className='bg-gray-50 rounded-lg hover:bg-gray-100 dark:bg-zinc-950 py-2 md:px-7 px-4'>
-                                <Accordion type="single" collapsible>
-                                    <AccordionItem value="item-1">
-                                        <AccordionTrigger className="font-bold text-lg">Can I add my own images?</AccordionTrigger>
-                                        <AccordionContent className="text-gray-800 dark:text-white leading-normal text-base">
-                                            <span>
-                                                Absolutely. That’s a basic function, and we made sure to have it available. Would it make sense to have a portfolio template generated by an AI without a single picture of your own work? In any case, we also offer the possibility of asking the AI to generate images for you via prompts. If making an impression is your goal, you’ll have an easy time!
                                             </span>
                                         </AccordionContent>
                                     </AccordionItem>

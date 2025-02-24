@@ -3,6 +3,10 @@ import { Button } from '../ui/button';
 import Themes from '../Themes/Themes';
 import ModalTooltip from "../Tooltip/ModalTooltip";
 import { useNavigation } from '../Navigation/Navigate';
+import { BiLoaderCircle } from "react-icons/bi";
+import { useIsLoggedIn } from "@/utils/auth";
+import { useNavigate } from "react-router-dom";
+import { useAccess } from "../context/useAccess";
 
 interface UserInputModalProps {
     themeId: number;
@@ -11,7 +15,6 @@ interface UserInputModalProps {
 }
 
 const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeModal }) => {
-    // Error messages and state
     const [titleWarning, setTitleWarning] = useState("");
     const [slideLimitWarning, setSlideLimitWarning] = useState("");
     const [fileLimitWarning, setFileLimitWarning] = useState("");
@@ -30,8 +33,13 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeM
         tone: "Professional",
         language: "English",
         numberOfSlides: "7",
-        style: themeId ?? 1,
+        style: themeId ?? 0,
     });
+    const [showError, setShowError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+    const isUserLoggedIn = useIsLoggedIn();
+    const { allowAccess } = useAccess();
 
     // Synchronous validation helper function for title
     const validateTitle = (value: string): string => {
@@ -204,73 +212,113 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeM
         console.log("Updated formData style:", selectedThemeId);
     }
 
+    const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        // Run validations immediately
-        const titleError = validateTitle(formData.title);
-        const slidesError = validateSlides(Number(formData.numberOfSlides));
-        let fileError = "";
-        if (file.length > 1) {
-            fileError = "You can only upload up to 1 file.";
-        }
-
-        // Update error state for display
-        setTitleWarning(titleError);
-        setSlideLimitWarning(slidesError);
-        setFileLimitWarning(fileError);
-
-        // Block submission if any error exists
-        if (titleError || slidesError || fileError) {
-            console.log("Form has errors. Submission blocked.");
-            return;
-        }
-
-        // Prepare form data for submission
-        const formDataToSend = new FormData();
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('tone', formData.tone);
-        formDataToSend.append('language', formData.language);
-        formDataToSend.append('num_slides', formData.numberOfSlides.toString());
-        formDataToSend.append('style', formData.style.toString());
-
-        if (file.length > 0) {
-            // Only append up to 1 files
-            file.forEach((f) => formDataToSend.append("file", f));
-        }
-
-        console.log("Form Data Sent to Backend:", formData);
-        for (const pair of formDataToSend.entries()) {
-            console.log(pair[0], pair[1]);
-        }
-
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/user/user_input', {
-                method: 'POST',
-                body: formDataToSend,
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to submit form');
+        if (isUserLoggedIn) {
+            // Run validations
+            const titleError = validateTitle(formData.title);
+            const slidesError = validateSlides(Number(formData.numberOfSlides));
+            let fileError = "";
+            if (file.length > 1) {
+                fileError = "You can only upload up to 1 file.";
             }
 
-            const result = await response.json();
-            console.log('Success:', result)
+            // Set validation warnings
+            setTitleWarning(titleError);
+            setSlideLimitWarning(slidesError);
+            setFileLimitWarning(fileError);
 
-            // Clear form and file inputs after successfull submission
-            setFormData({
-                title: '',
-                tone: 'Professional',
-                language: 'English',
-                numberOfSlides: "7",
-                style: 1,
-            });
-            setFile([]);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
+            // If any error exists, stop submission
+            if (titleError || slidesError || fileError) {
+                console.log("Form has errors. Submission blocked.");
+                return;
             }
-        } catch (error) {
-            console.log('Error:', error)
+
+            setIsLoading(true);
+
+            try {
+                const formDataToSend = new FormData();
+                formDataToSend.append('title', formData.title);
+                formDataToSend.append('tone', formData.tone);
+                formDataToSend.append('language', formData.language);
+                formDataToSend.append('num_slides', formData.numberOfSlides.toString());
+                formDataToSend.append('style', formData.style.toString());
+
+                if (file.length > 0) {
+                    file.forEach((f) => formDataToSend.append("file", f));
+                }
+
+                console.log("Form Data Sent to Backend:", formData);
+
+                const response = await fetch('http://127.0.0.1:8000/api/user/user_input', {
+                    method: 'POST',
+                    body: formDataToSend,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Failed to submit form');
+                }
+
+                await response.json();
+
+                // Clear form and file inputs
+                setFormData({
+                    title: '',
+                    tone: 'Professional',
+                    language: 'English',
+                    numberOfSlides: "7",
+                    style: 0,
+                });
+                setFile([]);
+
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                }
+
+                // Redirect after successful submission
+                allowAccess();
+                handleButtonClick('/ppt_viewer');
+
+            } catch (error: unknown) {
+                console.log("Error:", error);
+                if (error instanceof Error) {
+                    setShowError(error.message);
+                } else {
+                    setShowError("An unexpected error occurred. Please try again.");
+                }
+
+                setTimeout(() => {
+                    setShowError(null);
+                }, 7000);
+            } finally {
+                setIsLoading(false);
+            }
+        } else {
+            // Convert file to Base64 before storing
+            let base64File = "";
+            if (file.length > 0) {
+                base64File = await fileToBase64(file[0]); // Convert first file to Base64
+            }
+
+            // Store formData in localStorage (without file)
+            localStorage.setItem("pendingPPT", JSON.stringify({ ...formData }));
+
+            if (base64File) {
+                localStorage.setItem("pendingPPTFile", base64File);
+            }
+
+            navigate("/login");
         }
     };
 
@@ -278,7 +326,19 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeM
         <>
             {isOpen && (
                 <div className="fixed top-0 right-0 left-0 p-1 py-6 z-50 flex justify-center items-center w-full h-full bg-zinc-950/50 overflow-y-auto">
-                    <div className="lg:w-1/2 md:w-fit mt-28">
+                    <div className="lg:w-1/2 md:w-fit mt-40">
+                        <div className="absolute right-1">
+                            {showError && (
+                                <div className="flex items-center p-4 mb-4 w-[370px] text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                    <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <div>
+                                        <span className="text-base">{showError}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         {/* Modal content */}
                         <div className="p-5 sm:px-8 bg-white rounded-lg shadow dark:bg-zinc-800">
 
@@ -334,7 +394,7 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeM
                                     {/* Number of Slides */}
                                     <div className='flex-1 lg:flex-0'>
                                         <h3 className="md:text-lg text-base mb-2 text-black dark:text-white font-semibold">Number of slides</h3>
-                                        <input type="number" required value={formData.numberOfSlides} onChange={handleSlideChange} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
+                                        <input type="number" min={6} required value={formData.numberOfSlides} onChange={handleSlideChange} className="pl-5 bg-white rounded border border-gray-300 w-full appearance-none placeholder:text-gray-600 focus:outline-none md:h-9 h-8 text-gray-900 text-sm" />
                                         {/* Warning Message */}
                                         {slideLimitWarning && (
                                             <p className="text-red-500 text-xs absolute">{slideLimitWarning}</p>
@@ -412,23 +472,27 @@ const UserInputModal: React.FC<UserInputModalProps> = ({ themeId, isOpen, closeM
                                 </div>
 
                                 {/* Modal Generate Button */}
-                                <Button type='submit' className="flex bg-zinc-950 dark:bg-slate-100 dark:text-black dark:hover:text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4 select-none" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)} onClick={() => handleButtonClick('')}>
-                                    <span className="flex items-center justify-center gap-2 font-Degular text-xl">
-                                        <svg className="fill-current h-7 mt-2" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M13.201 2.276 12.466.61c-.358-.813-1.512-.813-1.87 0L9.86 2.276c-.103.233-.29.42-.523.523l-1.666.735c-.813.358-.813 1.512 0 1.87l1.666.735c.234.103.42.29.523.523l.735 1.666c.358.813 1.512.813 1.87 0l.735-1.666c.103-.234.29-.42.523-.523l1.666-.735c.813-.358.813-1.512 0-1.87l-1.666-.735a1.021 1.021 0 0 1-.523-.523Z" className={`transition-transform duration-300 ${isHovered ? "scale-125" : ""}`}
-                                            />
-                                            <path
-                                                d="m3.628 6.347.493 1.118c.069.157.194.282.35.351l1.12.493a.686.686 0 0 1 0 1.256l-1.12.494a.685.685 0 0 0-.35.35l-.493 1.119a.686.686 0 0 1-1.256 0l-.493-1.119a.685.685 0 0 0-.351-.35L.409 9.565a.686.686 0 0 1 0-1.256l1.119-.493a.686.686 0 0 0 .35-.35l.494-1.12a.686.686 0 0 1 1.256 0Z"
-                                                className={`transition-transform duration-300 delay-75 ${isHovered ? "scale-125" : ""}`}
-                                            />
-                                            <path
-                                                d="m9.578 11.396.406.921c.057.13.16.232.289.29l.92.405c.45.198.45.836 0 1.034l-.92.406a.565.565 0 0 0-.29.29l-.405.92a.565.565 0 0 1-1.034 0l-.406-.92a.565.565 0 0 0-.29-.29l-.92-.406a.565.565 0 0 1 0-1.034l.92-.406a.565.565 0 0 0 .29-.289l.406-.92a.565.565 0 0 1 1.034 0Z"
-                                                className={`transition-transform duration-300 delay-100 ${isHovered ? "scale-125" : ""}`}
-                                            />
-                                        </svg>
-                                        Generate presentation
-                                    </span>
+                                <Button type='submit' className="flex bg-zinc-950 dark:bg-slate-100 dark:text-black dark:hover:text-white font-bold  h-12 rounded w-full hover:bg-gradient-to-l from-indigo-500 via-purple-600 to-indigo-500 md:mt-6 mt-4 select-none" onMouseEnter={handleMouseEnter} onMouseLeave={() => setIsHovered(false)}>
+                                    {isLoading ? (
+                                        <BiLoaderCircle className="animate-spin h-10 w-10" />
+                                    ) : (
+                                        <span className="flex items-center justify-center gap-2 font-Degular text-xl">
+                                            <svg className="fill-current h-7 mt-2" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M13.201 2.276 12.466.61c-.358-.813-1.512-.813-1.87 0L9.86 2.276c-.103.233-.29.42-.523.523l-1.666.735c-.813.358-.813 1.512 0 1.87l1.666.735c.234.103.42.29.523.523l.735 1.666c.358.813 1.512.813 1.87 0l.735-1.666c.103-.234.29-.42.523-.523l1.666-.735c.813-.358.813-1.512 0-1.87l-1.666-.735a1.021 1.021 0 0 1-.523-.523Z" className={`transition-transform duration-300 ${isHovered ? "scale-125" : ""}`}
+                                                />
+                                                <path
+                                                    d="m3.628 6.347.493 1.118c.069.157.194.282.35.351l1.12.493a.686.686 0 0 1 0 1.256l-1.12.494a.685.685 0 0 0-.35.35l-.493 1.119a.686.686 0 0 1-1.256 0l-.493-1.119a.685.685 0 0 0-.351-.35L.409 9.565a.686.686 0 0 1 0-1.256l1.119-.493a.686.686 0 0 0 .35-.35l.494-1.12a.686.686 0 0 1 1.256 0Z"
+                                                    className={`transition-transform duration-300 delay-75 ${isHovered ? "scale-125" : ""}`}
+                                                />
+                                                <path
+                                                    d="m9.578 11.396.406.921c.057.13.16.232.289.29l.92.405c.45.198.45.836 0 1.034l-.92.406a.565.565 0 0 0-.29.29l-.405.92a.565.565 0 0 1-1.034 0l-.406-.92a.565.565 0 0 0-.29-.29l-.92-.406a.565.565 0 0 1 0-1.034l.92-.406a.565.565 0 0 0 .29-.289l.406-.92a.565.565 0 0 1 1.034 0Z"
+                                                    className={`transition-transform duration-300 delay-100 ${isHovered ? "scale-125" : ""}`}
+                                                />
+                                            </svg>
+                                            Generate presentation
+                                        </span>
+                                    )}
                                 </Button>
                             </form>
                         </div>

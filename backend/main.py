@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
-from app.routers import user_input, signup, login
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.prisma_client import connect_to_db, disconnect_from_db
-from contextlib import asynccontextmanager
+from app.routers import user_input, signup, login, user_details, send_ppt
 
 
 @asynccontextmanager
@@ -35,12 +35,15 @@ app.add_middleware(
     allow_credentials=True,  # Allow cookies or credentials if needed
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
+    expose_headers=["Content-Disposition"],  # Expose the header to the frontend
 )
 
 # Register all routers
 app.include_router(signup.router, prefix="/api/user", tags=["Sign up"])
 app.include_router(login.router, prefix="/api/user", tags=["Log in"])
 app.include_router(user_input.router, prefix="/api/user", tags=["User Input"])
+app.include_router(send_ppt.router, prefix="/api/user", tags=["PPT File"])
+app.include_router(user_details.router, prefix="/api/user", tags=["User"])
 
 
 @app.get("/")

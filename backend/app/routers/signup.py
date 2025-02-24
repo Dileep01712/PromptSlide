@@ -1,4 +1,6 @@
 import os
+import jwt
+import datetime
 from dotenv import load_dotenv
 from passlib.hash import bcrypt
 import requests as http_requests
@@ -15,6 +17,22 @@ router = APIRouter()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_TOKEN_URL = os.getenv("GOOGLE_TOKEN_URL")
+
+# JWT Configuration
+SECRET_KEY = os.getenv("JWT_SECRET", "")  # Use a secure secret key
+ALGORITHAM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # Token expiry time
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+
+def create_jwt_token(data: dict, expires_delta: datetime.timedelta):
+    """
+    Generate JWT token with expiry.
+    """
+    payload = data.copy()
+    expire = datetime.datetime.utcnow() + expires_delta
+    payload.update({"exp": expire})
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHAM)
 
 
 # Normal Sign up
@@ -49,12 +67,24 @@ async def register_user(
             }
         )
 
+        # Create JWT token
+        # access_token = create_jwt_token(
+        #     {"id": new_user.id, "email": new_user.email},
+        #     datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        # )
+
+        refresh_token = create_jwt_token(
+            {"id": new_user.id, "email": new_user.email},
+            datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        )
+
         # Return the created user
         return UserResponse(
             id=new_user.id,
             firstName=new_user.firstName,
             lastName=new_user.lastName,
             email=new_user.email,
+            refresh_token=refresh_token,
         )
 
     except HTTPException as http_exc:
@@ -131,11 +161,23 @@ async def register_user_google(
             }
         )
 
+        # Create JWT token
+        # access_token = create_jwt_token(
+        #     {"id": new_user.id, "email": new_user.email},
+        #     datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        # )
+
+        refresh_token = create_jwt_token(
+            {"id": new_user.id, "email": new_user.email},
+            datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        )
+
         return UserResponse(
             id=new_user.id,
             firstName=new_user.firstName,
             lastName=new_user.lastName,
             email=new_user.email,
+            refresh_token=refresh_token,
         )
 
     except HTTPException as http_exc:

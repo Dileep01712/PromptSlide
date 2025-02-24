@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
@@ -26,6 +27,7 @@ class UserResponse(BaseModel):
     firstName: str
     lastName: str
     email: EmailStr
+    refresh_token: Optional[str] = None  # Made optional
 
     # Allows Pydantic to map database attributes to the response schema
     class Config:
@@ -39,3 +41,12 @@ class Login(BaseModel):
 
 class LoginRequest(BaseModel):
     user: Login
+
+
+# New response model for fetching user details
+class UserDetailsResponse(BaseModel):
+    firstName: str
+    email: EmailStr
+
+    class Config:
+        from_attributes = True

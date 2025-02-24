@@ -1,17 +1,12 @@
 import os
-import sys
 import traceback
 from typing import List
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from app.services.faiss_vector_db import add_to_vector_db, clear_vector_db
 from app.services.text_generator import generate_presentation_from_content
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form
 from app.utils.text_processing import extract_text_from_file, clean_text, chunk_text
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-
-app = FastAPI()
 router = APIRouter()
-app.include_router(router)
 
 
 @router.post("/user_input")
@@ -20,7 +15,7 @@ async def user_data(
     tone: str = Form("Professional"),
     language: str = Form("English"),
     num_slides: int = Form(7),
-    style: int = Form(1),
+    style: int = Form(0),
     file: List[UploadFile] = File(None),
 ):
     """
@@ -39,13 +34,21 @@ async def user_data(
         if not title.strip() or not tone.strip() or not language.strip():
             raise HTTPException(status_code=400, detail="All fields must be filled in.")
 
-        print(style)
+        print("Selected style: ", style)
 
         # Ensure num_slide  and style is a positive number
-        if num_slides <= 0 or style <= 0:
+        if num_slides <= 0:
             raise HTTPException(
                 status_code=400, detail="Number of slides must be a psoitive number."
             )
+
+        if style < 0:
+            print("Index of template must be a psoitive number.")
+
+        print(f"Received file: {file}")  # ✅ Debugging statement
+        if file:
+            print(f"File Name: {file[0].filename}")  # ✅ Check file name
+            print(f"File Type: {file[0].content_type}")  # ✅ Check file type
 
         request_data = {
             "title": title,
@@ -53,6 +56,7 @@ async def user_data(
             "language": language,
             "num_slides": num_slides,
             "style": style,
+            "file": file,
         }
         print(f"\nRequest Data: {request_data}")
 
@@ -82,9 +86,11 @@ async def user_data(
                 print("No content extracted from the uploaded file.")
 
             os.remove(file_path)  # Remove the uploaded file after processing
-
+        actual_slides = num_slides - 1
         # Pass user inputs to generate the presentation
-        generate_presentation_from_content(title, tone, language, num_slides)
+        generate_presentation_from_content(
+            title, tone, language, actual_slides, index=style
+        )
 
         # TODO: Send ppt file
         return {"message": "Parameters are passed successfully!"}

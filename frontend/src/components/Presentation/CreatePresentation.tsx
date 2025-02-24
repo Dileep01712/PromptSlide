@@ -8,9 +8,9 @@ import { MeshGradientRenderer } from '@johnn-e/react-mesh-gradient';
 const CreatePresentation: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const [activeDiv, setActiveDiv] = useState(1);
     const [typeSpeed, setTypeSpeed] = useState(60);
     const [backSpeed, setBackSpeed] = useState(70);
+    
 
     const handleToggleModal = () => {
         setIsOpen(!isOpen);
@@ -140,7 +140,7 @@ const CreatePresentation: React.FC = () => {
                             </>
 
                             {/* Modal */}
-                            <UserInputModal activeDiv={activeDiv} setActiveDiv={setActiveDiv} closeModal={closeModal} isOpen={isOpen} />
+                            <UserInputModal closeModal={closeModal} isOpen={isOpen} themeId={0} />
                         </div>
                     </div>
                 </div>
